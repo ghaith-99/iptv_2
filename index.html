@@ -1,0 +1,252 @@
+<html>
+<head>
+    <base href="/">
+    <meta charset="UTF-8">
+    <title>IPTV Sports Player</title>
+    <style>
+    :root {
+        --primary: #1a202c;
+        --secondary: #2d3748;
+        --accent: #4299e1;
+        --text: #e2e8f0;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: var(--primary);
+        color: var(--text);
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .player-container {
+        background: var(--secondary);
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+
+    .video-player {
+        width: 100%;
+        aspect-ratio: 16/9;
+        background: #000;
+        margin-bottom: 20px;
+    }
+
+    .channels {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .channel-item {
+        background: var(--secondary);
+        padding: 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        border: 2px solid transparent;
+        text-align: center;
+    }
+
+    .channel-item:hover {
+        transform: translateY(-2px);
+        border-color: var(--accent);
+    }
+
+    .channel-item img {
+        width: 80px; /* حجم الأيقونة */
+        height: auto; /* الحفاظ على نسبة العرض إلى الارتفاع */
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .controls {
+        display: flex;
+        gap: 10px;
+        margin: 15px 0;
+    }
+
+    button {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+    .quality-selector {
+        background: var(--secondary);
+        color: var(--text);
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid var(--accent);
+    }
+
+    .loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid var(--accent);
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>مشغل القنوات الرياضية</h1>
+    
+    <div class="player-container">
+        <div class="video-player" id="videoPlayer">
+            <video id="player" controls style="width: 100%; height: 100%;">
+                Your browser does not support the video element.
+            </video>
+        </div>
+        
+        <div class="controls">
+            <select class="quality-selector" id="qualitySelector">
+                <option value="high">جودة عالية</option>
+                <option value="medium">جودة متوسطة</option>
+                <option value="low">جودة منخفضة</option>
+            </select>
+            
+            <button id="fullscreenBtn">ملء الشاشة</button>
+        </div>
+    </div>
+
+    <div class="channels" id="channelList">
+        <!-- Channel items will be populated by JavaScript -->
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch channels data from the JSON file
+    fetch('https://raw.githubusercontent.com/ghaith-99/ghaith-99/refs/heads/main/mytv.json?v=1730019426588')
+        .then(response => response.json())
+        .then(data => {
+            const channels = data; // Use the fetched data
+            
+            const player = document.getElementById('player');
+            const channelList = document.getElementById('channelList');
+            const qualitySelector = document.getElementById('qualitySelector');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            
+            // Initialize HLS.js
+            const hls = new Hls();
+            
+            // Populate channel list
+            channels.forEach(channel => {
+                const channelItem = document.createElement('div');
+                channelItem.className = 'channel-item';
+                channelItem.innerHTML = `
+                    <img src="${channel.logo}" alt="${channel.channel}">
+                    <strong>${channel.channel}</strong>
+                `;
+                channelItem.onclick = () => loadChannel(channel.url);
+                channelList.appendChild(channelItem);
+            });
+        
+            function loadChannel(url) {
+                if (Hls.isSupported()) {
+                    hls.loadSource(url);
+                    hls.attachMedia(player);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                        player.play();
+                    });
+                }
+                // For native HLS support (Safari)
+                else if (player.canPlayType('application/vnd.apple.mpegurl')) {
+                    player.src = url;
+                    player.addEventListener('loadedmetadata', function() {
+                        player.play();
+                    });
+                }
+            }
+        
+            // Quality selector handling
+            qualitySelector.addEventListener('change', function() {
+                if (hls) {
+                    switch(this.value) {
+                        case 'high':
+                            hls.currentLevel = -1; // Auto
+                            break;
+                        case 'medium':
+                            hls.currentLevel = Math.floor(hls.levels.length / 2);
+                            break;
+                        case 'low':
+                            hls.currentLevel = 0;
+                            break;
+                    }
+                }
+            });
+        
+            // Fullscreen button handling
+            fullscreenBtn.addEventListener('click', function() {
+                if (player.requestFullscreen) {
+                    player.requestFullscreen();
+                } else if (player.webkitRequestFullscreen) {
+                    player.webkitRequestFullscreen();
+                } else if (player.msRequestFullscreen) {
+                    player.msRequestFullscreen();
+                }
+            });
+        
+            // Error handling
+            hls.on(Hls.Events.ERROR, function(event, data) {
+                console.error('HLS Error:', data);
+                if (data.fatal) {
+                    switch(data.type) {
+                        case Hls.ErrorTypes.NETWORK_ERROR:
+                            console.log('Network error, trying to recover...');
+                            hls.startLoad();
+                            break;
+                        case Hls.ErrorTypes.MEDIA_ERROR:
+                            console.log('Media error, trying to recover...');
+                            hls.recoverMediaError();
+                            break;
+                        default:
+                            console.log('Unrecoverable error');
+                            hls.destroy();
+                            break;
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching channels:', error));
+});
+</script>
+</body>
+</html>
