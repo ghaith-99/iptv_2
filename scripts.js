@@ -196,7 +196,7 @@ async function addPerson() {
         return;
     }
 
-    const profileImageUrl = `${supabaseUrl}/storage/v1/object/public/profile_images/${imageData.path}`;
+    const profileImageUrl = `${supabaseUrl}/storage/v1/object/public/profileimages/${imageData.path}`;
 
     // Insert the new person into the persons table
     const { data: personData, error: insertError } = await supabase.from('persons').insert([
