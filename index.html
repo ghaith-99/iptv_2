@@ -18,6 +18,7 @@
         <button onclick="showPlayers('retired')">لاعبين معتزلين</button>
         <button onclick="showPlayers('active')">لاعبين حاليين</button>
         <button onclick="showCoaches()">مدربين</button>
+        <button id="manage-users-button" style="display:none;" onclick="showManageUsers()">إدارة المستخدمين</button>
         <button id="add-button" style="display:none;" onclick="showAddForm()">إضافة</button>
         <div id="content"></div>
     </div>
@@ -29,13 +30,30 @@
             <!-- Options will be populated dynamically -->
         </select>
         <input type="date" id="new-birth-date" placeholder="تاريخ الميلاد">
-        <input type="text" id="new-profile-image-url" placeholder="رابط صورة الشخص">
+        <input type="file" id="new-profile-image" accept="image/*">
         <select id="new-type" placeholder="النوع">
             <option value="retired_player">لاعب معتزول</option>
             <option value="current_player">لاعب حالي</option>
             <option value="coach">مدرب</option>
         </select>
+        <div id="clubs-container">
+            <!-- Clubs checkboxes will be populated dynamically -->
+        </div>
         <button onclick="addPerson()">إضافة</button>
+    </div>
+
+    <div id="manage-users-form" class="form" style="display:none;">
+        <h2>إدارة المستخدمين</h2>
+        <input type="email" id="new-user-email" placeholder="بريد المستخدم الجديد">
+        <input type="password" id="new-user-password" placeholder="كلمة مرور المستخدم الجديدة">
+        <select id="new-user-role" placeholder="دور المستخدم">
+            <option value="user">مستخدم عادي</option>
+            <option value="admin">مسؤول</option>
+        </select>
+        <button onclick="addUser()">إضافة مستخدم</button>
+        <hr>
+        <h3>قائمة المستخدمين:</h3>
+        <div id="users-list"></div>
     </div>
 
     <div id="modal" class="modal" style="display:none;">
