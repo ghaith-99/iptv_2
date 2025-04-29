@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي كرة القدم</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="login-form" class="form">
+        <h2>تسجيل الدخول</h2>
+        <input type="email" id="email" placeholder="البريد الإلكتروني">
+        <input type="password" id="password" placeholder="كلمة المرور">
+        <button onclick="login()">تسجيل الدخول</button>
+    </div>
+
+    <div id="main-content" style="display:none;">
+        <button onclick="showPlayers('retired')">لاعبين معتزلين</button>
+        <button onclick="showPlayers('active')">لاعبين حاليين</button>
+        <button onclick="showCoaches()">مدربين</button>
+        <button id="add-button" style="display:none;" onclick="showAddForm()">إضافة</button>
+        <div id="content"></div>
+    </div>
+
+    <div id="add-form" class="form" style="display:none;">
+        <h2>إضافة شخص جديد</h2>
+        <input type="text" id="new-name" placeholder="اسم الشخص">
+        <select id="new-nationality" placeholder="الجنسية">
+            <!-- Options will be populated dynamically -->
+        </select>
+        <input type="date" id="new-birth-date" placeholder="تاريخ الميلاد">
+        <input type="text" id="new-profile-image-url" placeholder="رابط صورة الشخص">
+        <select id="new-type" placeholder="النوع">
+            <option value="retired_player">لاعب معتزول</option>
+            <option value="current_player">لاعب حالي</option>
+            <option value="coach">مدرب</option>
+        </select>
+        <button onclick="addPerson()">إضافة</button>
+    </div>
+
+    <div id="modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="modal-image" src="" alt="Larger Image">
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@latest"></script>
+    <script src="script.js"></script>
+</body>
+</html>
