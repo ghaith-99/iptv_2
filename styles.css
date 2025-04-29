@@ -32,6 +32,10 @@ body {
     border-radius: 5px;
 }
 
+.form input[type="file"] {
+    margin: 10px 0;
+}
+
 .form button {
     padding: 10px 20px;
     background-color: #007bff;
@@ -99,4 +103,46 @@ body {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+#clubs-container {
+    margin: 10px 0;
+}
+
+#clubs-container label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#users-list {
+    margin-top: 20px;
+}
+
+#users-list .user-item {
+    background-color: #fff;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#users-list .user-item .user-details {
+    flex-grow: 1;
+}
+
+#users-list .user-item .user-actions button {
+    margin-left: 5px;
+    padding: 5px 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#users-list .user-item .user-actions button:hover {
+    background-color: #c82333;
 }
