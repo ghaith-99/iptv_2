@@ -1,400 +1,51 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة تخمين لاعبي كرة القدم</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Cairo', Arial, sans-serif;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #f0f2f5;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            text-align: right;
-        }
-
-        header {
-            background-color: #1a237e;
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 1.8rem;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 1rem;
-            flex: 1;
-        }
-
-        .player-card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-
-        .player-img-container {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 3px solid #1a237e;
-            margin: 0 auto 1.5rem;
-            opacity: 0;
-            transition: opacity 0.7s ease;
-        }
-
-        .player-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .player-info {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
-
-        .info-item {
-            padding: 0.8rem;
-            background-color: #f5f5f5;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            opacity: 0;
-            transition: opacity 0.7s ease;
-        }
-
-        .info-label {
-            font-weight: bold;
-            color: #1a237e;
-            margin-bottom: 0.3rem;
-        }
-
-        .info-value {
-            font-size: 1.1rem;
-        }
-
-        .club-logo {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-            margin-right: 5px;
-            vertical-align: middle;
-        }
-
-        .guess-section {
-            margin-top: 2rem;
-        }
-
-        .guess-input {
-            width: 100%;
-            padding: 0.8rem;
-            font-size: 1.1rem;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-
-        .guess-btn {
-            background-color: #1a237e;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.8rem 1.5rem;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .guess-btn:hover {
-            background-color: #0d1757;
-        }
-
-        .hint-btn {
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.8rem 1.5rem;
-            font-size: 1.1rem;
-            cursor: pointer;
-            margin-right: 0.5rem;
-            transition: background-color 0.3s;
-        }
-
-        .hint-btn:hover {
-            background-color: #388e3c;
-        }
-
-        .new-game-btn {
-            background-color: #f57c00;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.8rem 1.5rem;
-            font-size: 1.1rem;
-            cursor: pointer;
-            margin-right: 0.5rem;
-            transition: background-color 0.3s;
-        }
-
-        .new-game-btn:hover {
-            background-color: #e65100;
-        }
-
-        .feedback {
-            margin-top: 1rem;
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 1.2rem;
-            display: none;
-        }
-
-        .score-section {
-            margin-top: 2rem;
-            text-align: center;
-        }
-
-        .score-display {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .success {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            border: 1px solid #a5d6a7;
-        }
-
-        .error {
-            background-color: #ffebee;
-            color: #c62828;
-            border: 1px solid #ef9a9a;
-        }
-
-        .clubs-history {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .club-badge {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-        }
-
-        .timer {
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        @media (max-width: 600px) {
-            .player-info {
-                grid-template-columns: 1fr;
-            }
-
-            .player-img-container {
-                width: 120px;
-                height: 120px;
-            }
-        }
-    </style>
+    <title>تحدي كرة القدم</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>لعبة تخمين لاعبي كرة القدم</h1>
-    </header>
+    <div id="login-form" class="form">
+        <h2>تسجيل الدخول</h2>
+        <input type="email" id="email" placeholder="البريد الإلكتروني">
+        <input type="password" id="password" placeholder="كلمة المرور">
+        <button onclick="login()">تسجيل الدخول</button>
+    </div>
 
-    <div class="container">
-        <div class="timer" id="timer">الوقت: 60</div>
-        <div class="player-card">
-            <div class="player-img-container" id="playerImg">
-                <img src="/api/placeholder/150/150" alt="صورة اللاعب" class="player-img" id="playerImage">
-            </div>
-            <div class="player-info" id="playerInfo">
-                <!-- المعلومات ستُضاف ديناميكياً هنا -->
-            </div>
-        </div>
+    <div id="main-content" style="display:none;">
+        <button onclick="showPlayers('retired')">لاعبين معتزلين</button>
+        <button onclick="showPlayers('active')">لاعبين حاليين</button>
+        <button onclick="showCoaches()">مدربين</button>
+        <button id="add-button" style="display:none;" onclick="showAddForm()">إضافة</button>
+        <div id="content"></div>
+    </div>
 
-        <div class="guess-section">
-            <input type="text" class="guess-input" id="guessInput" placeholder="اكتب اسم اللاعب...">
-            <button class="guess-btn" id="guessBtn">تخمين</button>
-            <button class="hint-btn" id="hintBtn">عرض معلومة</button>
-            <button class="new-game-btn" id="newGameBtn">لعبة جديدة</button>
-        </div>
+    <div id="add-form" class="form" style="display:none;">
+        <h2>إضافة شخص جديد</h2>
+        <input type="text" id="new-name" placeholder="اسم الشخص">
+        <select id="new-nationality" placeholder="الجنسية">
+            <!-- Options will be populated dynamically -->
+        </select>
+        <input type="date" id="new-birth-date" placeholder="تاريخ الميلاد">
+        <input type="text" id="new-profile-image-url" placeholder="رابط صورة الشخص">
+        <select id="new-type" placeholder="النوع">
+            <option value="retired_player">لاعب معتزول</option>
+            <option value="current_player">لاعب حالي</option>
+            <option value="coach">مدرب</option>
+        </select>
+        <button onclick="addPerson()">إضافة</button>
+    </div>
 
-        <div class="feedback" id="feedback"></div>
-
-        <div class="score-section">
-            <div class="score-display">النقاط: <span id="scoreValue">0</span></div>
+    <div id="modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="modal-image" src="" alt="Larger Image">
         </div>
     </div>
 
-    <script>
-        // قائمة اللاعبين مع معلوماتهم
-        const players = [
-            {
-                name: "ليونيل ميسي",
-                image: "/api/placeholder/150/150",
-                currentClub: "إنتر ميامي",
-                currentClubLogo: "/api/placeholder/30/30",
-                previousClubs: ["برشلونة", "باريس سان جيرمان"],
-                previousClubsLogos: ["/api/placeholder/30/30", "/api/placeholder/30/30"],
-                age: 37,
-                height: "1.70 م",
-                nationality: "الأرجنتين",
-                clubNumber: 10,
-                nationalTeamNumber: 10
-            },
-            {
-                name: "كريستيانو رونالدو",
-                image: "/api/placeholder/150/150",
-                currentClub: "النصر السعودي",
-                currentClubLogo: "/api/placeholder/30/30",
-                previousClubs: ["مانشستر يونايتد", "ريال مدريد", "يوفنتوس"],
-                previousClubsLogos: ["/api/placeholder/30/30", "/api/placeholder/30/30", "/api/placeholder/30/30"],
-                age: 39,
-                height: "1.87 م",
-                nationality: "البرتغال",
-                clubNumber: 7,
-                nationalTeamNumber: 7
-            },
-            {
-                name: "محمد صلاح",
-                image: "/api/placeholder/150/150",
-                currentClub: "ليفربول",
-                currentClubLogo: "/api/placeholder/30/30",
-                previousClubs: ["المقاولون العرب", "بازل", "تشيلسي", "فيورنتينا", "روما"],
-                previousClubsLogos: [
-                    "/api/placeholder/30/30",
-                    "/api/placeholder/30/30",
-                    "/api/placeholder/30/30",
-                    "/api/placeholder/30/30",
-                    "/api/placeholder/30/30"
-                ],
-                age: 32,
-                height: "1.75 م",
-                nationality: "مصر",
-                clubNumber: 11,
-                nationalTeamNumber: 10
-            },
-            {
-                name: "إرلينغ هالاند",
-                image: "/api/placeholder/150/150",
-                currentClub: "مانشستر سيتي",
-                currentClubLogo: "/api/placeholder/30/30",
-                previousClubs: ["مولده", "سالزبورغ", "بوروسيا دورتموند"],
-                previousClubsLogos: ["/api/placeholder/30/30", "/api/placeholder/30/30", "/api/placeholder/30/30"],
-                age: 24,
-                height: "1.95 م",
-                nationality: "النرويج",
-                clubNumber: 9,
-                nationalTeamNumber: 9
-            },
-            {
-                name: "كيليان مبابي",
-                image: "/api/placeholder/150/150",
-                currentClub: "ريال مدريد",
-                currentClubLogo: "/api/placeholder/30/30",
-                previousClubs: ["موناكو", "باريس سان جيرمان"],
-                previousClubsLogos: ["/api/placeholder/30/30", "/api/placeholder/30/30"],
-                age: 25,
-                height: "1.78 م",
-                nationality: "فرنسا",
-                clubNumber: 9,
-                nationalTeamNumber: 10
-            },
-            {
-                name: "كريم بنزيما",
-                image: "/api/placeholder/150/150",
-                currentClub: "الاتحاد السعودي",
-                currentClubLogo: "/api/placeholder/30/30",
-                previousClubs: ["ليون", "ريال مدريد"],
-                previousClubsLogos: ["/api/placeholder/30/30", "/api/placeholder/30/30"],
-                age: 36,
-                height: "1.85 م",
-                nationality: "فرنسا",
-                clubNumber: 9,
-                nationalTeamNumber: 19
-            },
-            {
-                name: "نيمار",
-                image: "/api/placeholder/150/150",
-                currentClub: "الهلال السعودي",
-                currentClubLogo: "/api/placeholder/30/30",
-                previousClubs: ["سانتوس", "برشلونة", "باريس سان جيرمان"],
-                previousClubsLogos: ["/api/placeholder/30/30", "/api/placeholder/30/30", "/api/placeholder/30/30"],
-                age: 32,
-                height: "1.75 م",
-                nationality: "البرازيل",
-                clubNumber: 10,
-                nationalTeamNumber: 10
-            },
-            {
-                name: "روبرت ليفاندوفسكي",
-                image: "/api/placeholder/150/150",
-                currentClub: "برشلونة",
-                currentClubLogo: "/api/placeholder/30/30",
-                previousClubs: ["ليخ بوزنان", "بوروسيا دورتموند", "بايرن ميونخ"],
-                previousClubsLogos: ["/api/placeholder/30/30", "/api/placeholder/30/30", "/api/placeholder/30/30"],
-                age: 36,
-                height: "1.85 م",
-                nationality: "بولندا",
-                clubNumber: 9,
-                nationalTeamNumber: 9
-            },
-            {
-                name: "كيفن دي بروين",
-                image: "/api/placeholder/150/150",
-                currentClub: "مانشستر سيتي",
-                currentClubLogo: "/api/placeholder/30/30",
-                previousClubs: ["جينك", "تشيلسي", "فيردر بريمن", "فولفسبورج"],
-                previousClubsLogos: [
-                    "/api/placeholder/30/30", 
-                    "/api/placeholder/30/30", 
-                    "/api/placeholder/30/30", 
-                    "/api/placeholder/30/30"
-                ],
-                age: 33,
-                height: "1.81 م",
-                nationality: "بلجيكا",
-                clubNumber: 17,
-                nationalTeamNumber: 7
-            },
-            {
-                name: "فينيسيوس جونيور",
-                image: "/api/placeholder/150/150",
-                currentClub: "ريال مدريد",
-                currentClubLogo: "/api/placeholder/30/30",
-                previousClubs: ["فلامنغو"],
-                previousClubsLogos: ["/api/placeholder/30/30"],
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@latest"></script>
+    <script src="script.js"></script>
+</body>
+</html>
