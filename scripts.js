@@ -1,5 +1,5 @@
-const supabaseUrl = 'https://ugjzykrhwkwkxshcmrev.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVnanp5a3Jod2t3a3hzaGNtcmV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5NDg0NDcsImV4cCI6MjA2MTUyNDQ0N30.w915S7rpjvjvGDm8LFbWCsOuxmdZSUFxzoAXPZmnY4Y';
+const supabaseUrl = 'https://cvvjmioklaabxdydgikl.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2dmptaW9rbGFhYnhkeWRnaWtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5NjQ5ODEsImV4cCI6MjA2MTU0MDk4MX0.cOG5zuDlUlkJhwPrAciblTAF15pyJd6aaQXVEogH0QY'; // استبدل بchlave الأنون (anon key) الخاص بك
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 let isAdmin = false;
@@ -33,11 +33,14 @@ async function login() {
     isAdmin = data.role === 'admin';
     if (isAdmin) {
         document.getElementById('add-button').style.display = 'block';
+        document.getElementById('manage-users-button').style.display = 'block';
     }
 
     document.getElementById('login-form').style.display = 'none';
     document.getElementById('main-content').style.display = 'block';
     populateNationalities();
+    populateClubs();
+    loadUsersList();
 }
 
 async function populateNationalities() {
@@ -53,6 +56,28 @@ async function populateNationalities() {
         option.value = nationality.id;
         option.textContent = nationality.name;
         selectElement.appendChild(option);
+    });
+}
+
+async function populateClubs() {
+    const { data, error } = await supabase.from('clubs').select('*');
+    if (error) {
+        console.error('خطأ في جلب الأندية:', error);
+        return;
+    }
+
+    const container = document.getElementById('clubs-container');
+    container.innerHTML = ''; // Clear existing checkboxes
+
+    data.forEach(club => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+            <label>
+                <input type="checkbox" value="${club.id}">
+                ${club.name}
+            </label>
+        `;
+        container.appendChild(div);
     });
 }
 
@@ -156,10 +181,25 @@ async function addPerson() {
     const name = document.getElementById('new-name').value;
     const nationalityId = document.getElementById('new-nationality').value;
     const birthDate = document.getElementById('new-birth-date').value;
-    const profileImageUrl = document.getElementById('new-profile-image-url').value;
+    const profileImageFile = document.getElementById('new-profile-image').files[0];
     const type = document.getElementById('new-type').value;
 
-    const { data, error } = await supabase.from('persons').insert([
+    if (!profileImageFile) {
+        alert('يرجى اختيار صورة الشخصية.');
+        return;
+    }
+
+    // Upload the profile image to Supabase Storage
+    const { data: imageData, error: uploadError } = await supabase.storage.from('profile_images').upload(profileImageFile.name, profileImageFile);
+    if (uploadError) {
+        alert('خطأ في رفع الصورة: ' + uploadError.message);
+        return;
+    }
+
+    const profileImageUrl = `${supabaseUrl}/storage/v1/object/public/profile_images/${imageData.path}`;
+
+    // Insert the new person into the persons table
+    const { data: personData, error: insertError } = await supabase.from('persons').insert([
         {
             name: name,
             nationality_id: nationalityId,
@@ -169,11 +209,124 @@ async function addPerson() {
         }
     ]);
 
-    if (error) {
-        alert('خطأ في إضافة الشخص: ' + error.message);
-    } else {
-        alert('لقد تم إضافة الشخص بنجاح!');
-        document.getElementById('add-form').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
+    if (insertError) {
+        alert('خطأ في إضافة الشخص: ' + insertError.message);
+        return;
     }
+
+    // Get the newly inserted person ID
+    const personId = personData[0].id;
+
+    // Insert the selected clubs into the player_club_history table
+    const clubCheckboxes = document.querySelectorAll('#clubs-container input[type="checkbox"]:checked');
+    const clubIds = Array.from(clubCheckboxes).map(checkbox => checkbox.value);
+
+    for (const clubId of clubIds) {
+        const { error: historyError } = await supabase.from('player_club_history').insert([
+            {
+                player_id: personId,
+                club_id: clubId,
+                start_date: new Date().toISOString().split('T')[0], // Current date
+                end_date: null // Assuming the player is currently at the club
+            }
+        ]);
+
+        if (historyError) {
+            alert('خطأ في إضافة تاريخ النادي: ' + historyError.message);
+            return;
+        }
+    }
+
+    alert('لقد تم إضافة الشخص بنجاح!');
+    document.getElementById('add-form').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+}
+
+function showManageUsers() {
+    document.getElementById('main-content').style.display = 'none';
+    document.getElementById('manage-users-form').style.display = 'block';
+}
+
+async function addUser() {
+    const email = document.getElementById('new-user-email').value;
+    const password = document.getElementById('new-user-password').value;
+    const role = document.getElementById('new-user-role').value;
+
+    if (!email || !password) {
+        alert('يرجى إدخال البريد الإلكتروني وكلمة المرور.');
+        return;
+    }
+
+    const { user, session, error } = await supabase.auth.signUp({
+        email: email,
+        password: password
+    });
+
+    if (error) {
+        alert('خطأ في إنشاء المستخدم: ' + error.message);
+        return;
+    }
+
+    // Insert the new user into the profiles table
+    const { error: profileError } = await supabase.from('profiles').insert([
+        {
+            id: user.id,
+            role: role
+        }
+    ]);
+
+    if (profileError) {
+        alert('خطأ في إضافة بيانات المستخدم: ' + profileError.message);
+        return;
+    }
+
+    alert('لقد تم إضافة المستخدم بنجاح!');
+    document.getElementById('new-user-email').value = '';
+    document.getElementById('new-user-password').value = '';
+    loadUsersList();
+}
+
+async function loadUsersList() {
+    const { data, error } = await supabase.from('profiles').select('*');
+    if (error) {
+        console.error('خطأ في جلب قائمة المستخدمين:', error);
+        return;
+    }
+
+    const usersList = document.getElementById('users-list');
+    usersList.innerHTML = '';
+
+    data.forEach(user => {
+        const userItem = document.createElement('div');
+        userItem.className = 'user-item';
+        userItem.innerHTML = `
+            <div class="user-details">
+                <p><strong>البريد الإلكتروني:</strong> ${user.id}</p>
+                <p><strong>الدور:</strong> ${user.role}</p>
+            </div>
+            <div class="user-actions">
+                <button onclick="deleteUser('${user.id}')">حذف</button>
+            </div>
+        `;
+        usersList.appendChild(userItem);
+    });
+}
+
+async function deleteUser(userId) {
+    // Delete user from profiles table
+    const { error: profileError } = await supabase.from('profiles').delete().eq('id', userId);
+    if (profileError) {
+        alert('خطأ في حذف المستخدم: ' + profileError.message);
+        return;
+    }
+
+    // Delete user from auth.users table
+    const { error: authError } = await supabase.auth.admin.deleteUser(userId);
+    if (authError) {
+        alert('خطأ في حذف المستخدم من Auth: ' + authError.message);
+        return;
+    }
+
+    alert('لقد تم حذف المستخدم بنجاح!');
+    loadUsersList();
 }
