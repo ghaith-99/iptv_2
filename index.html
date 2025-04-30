@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>تحدي كرة قدم - Firebase</title>
+  <title>نظام دخول باستخدام Firebase</title>
   <style>
     body {
       font-family: Arial;
@@ -13,67 +13,49 @@
       text-align: center;
     }
     .container {
-      max-width: 600px;
-      margin: 40px auto;
+      max-width: 500px;
+      margin: 50px auto;
       background: white;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     h1 {
       color: #1e3a8a;
     }
-    input, select, button {
+    input, button {
       width: 100%;
       padding: 10px;
-      margin: 10px 0;
+      margin: 8px 0;
       border-radius: 5px;
       border: 1px solid #ccc;
-      box-sizing: border-box;
     }
-    .player {
-      background: #f9f9f9;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    img {
-      width: 50px;
-      height: 50px;
-      object-fit: cover;
-    }
-    .collection-item {
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      margin: 5px;
-      display: flex;
-      align-items: center;
-      justify-content: start;
-      gap: 10px;
-      background-color: #f6f6f6;
+    #admin-section {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #ccc;
     }
   </style>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
 </head>
 <body>
+
   <div class="container">
     <h1>تسجيل الدخول</h1>
     <input type="text" id="username" placeholder="اسم المستخدم">
     <input type="password" id="password" placeholder="كلمة المرور">
     <button onclick="login()">تسجيل الدخول</button>
 
-    <div id="admin-section" style="display:none;">
-      <h2>إنشاء حساب مستخدم جديد</h2>
+    <div id="admin-section" style="display: none;">
+      <h2>إنشاء حساب جديد</h2>
       <input type="text" id="new-username" placeholder="اسم المستخدم الجديد">
-      <input type="email" id="new-email" placeholder="البريد الإلكتروني الجديد">
-      <input type="password" id="new-password" placeholder="كلمة المرور الجديدة">
-      <button onclick="adminCreateUser()">إنشاء حساب</button>
+      <input type="email" id="new-email" placeholder="البريد الإلكتروني">
+      <input type="password" id="new-password" placeholder="كلمة المرور">
+      <button onclick="adminCreateUser()">إنشاء الحساب</button>
     </div>
   </div>
 
@@ -102,10 +84,11 @@
       }
 
       const email = doc.data().email;
+
       auth.signInWithEmailAndPassword(email, password)
         .then(() => {
-          document.getElementById("admin-section").style.display = "block";
           alert("تم تسجيل الدخول بنجاح");
+          document.getElementById("admin-section").style.display = "block";
         })
         .catch(e => alert("فشل تسجيل الدخول: " + e.message));
     }
@@ -115,20 +98,21 @@
       const email = document.getElementById("new-email").value;
       const password = document.getElementById("new-password").value;
 
-      const usernameRef = db.collection("usernames").doc(username);
-      const doc = await usernameRef.get();
-      if (doc.exists) {
+      const docRef = db.collection("usernames").doc(username);
+      const existing = await docRef.get();
+      if (existing.exists) {
         alert("اسم المستخدم مستخدم مسبقاً");
         return;
       }
 
       auth.createUserWithEmailAndPassword(email, password)
         .then(async () => {
-          await usernameRef.set({ email });
+          await docRef.set({ email });
           alert("تم إنشاء الحساب الجديد بنجاح");
         })
         .catch(e => alert("فشل إنشاء الحساب: " + e.message));
     }
   </script>
+
 </body>
 </html>
