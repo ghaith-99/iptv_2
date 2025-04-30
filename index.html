@@ -4,7 +4,59 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>تحدي كرة قدم - Firebase</title>
-  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #1e3a8a;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    .player {
+      background: #f9f9f9;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+    }
+    .collection-item {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      margin: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      gap: 10px;
+      background-color: #f6f6f6;
+    }
+  </style>
+
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
@@ -12,47 +64,71 @@
 <body>
   <div class="container">
     <h1>تسجيل الدخول</h1>
-    <input type="email" id="email" placeholder="البريد الإلكتروني" />
-    <input type="password" id="password" placeholder="كلمة المرور" />
+    <input type="text" id="username" placeholder="اسم المستخدم">
+    <input type="password" id="password" placeholder="كلمة المرور">
     <button onclick="login()">تسجيل الدخول</button>
-    <button onclick="signup()">إنشاء حساب</button>
 
-    <div id="admin-section" style="display: none">
-      <h2>إضافة لاعب</h2>
-      <input type="text" id="name" placeholder="اسم اللاعب" />
-      <input type="number" id="age" placeholder="العمر" />
-      <select id="player-nationality"></select>
-      <input type="text" id="player_image" placeholder="رابط الصورة" />
-      <select id="type">
-        <option value="active">لاعب حالي</option>
-        <option value="retired">لاعب معتزل</option>
-        <option value="coach">مدرب</option>
-      </select>
-      <div id="club-checkboxes"></div>
-      <button onclick="addPlayer()">إضافة</button>
-
-      <h2>بحث عن لاعب</h2>
-      <input type="text" id="search-input" placeholder="ابحث عن لاعب" oninput="searchPlayers()" />
-
-      <h2>قائمة اللاعبين</h2>
-      <div id="players-list"></div>
-
-      <hr />
-      <h2>إدارة الجنسيات</h2>
-      <input type="text" id="nat-name" placeholder="اسم الجنسية" />
-      <input type="text" id="nat-img" placeholder="رابط صورة العلم" />
-      <button onclick="addNationality()">إضافة جنسية</button>
-      <div id="nat-list"></div>
-
-      <hr />
-      <h2>إدارة الأندية</h2>
-      <input type="text" id="club-name" placeholder="اسم النادي" />
-      <input type="text" id="club-img" placeholder="رابط صورة النادي" />
-      <button onclick="addClub()">إضافة نادي</button>
-      <div id="club-list"></div>
+    <div id="admin-section" style="display:none;">
+      <h2>إنشاء حساب مستخدم جديد</h2>
+      <input type="text" id="new-username" placeholder="اسم المستخدم الجديد">
+      <input type="email" id="new-email" placeholder="البريد الإلكتروني الجديد">
+      <input type="password" id="new-password" placeholder="كلمة المرور الجديدة">
+      <button onclick="adminCreateUser()">إنشاء حساب</button>
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBN-3xZDEgNzNCKd4zTDAsaaOWzjx3z9LM",
+      authDomain: "fbquiz-582d3.firebaseapp.com",
+      projectId: "fbquiz-582d3",
+      storageBucket: "fbquiz-582d3.appspot.com",
+      messagingSenderId: "939712254423",
+      appId: "1:939712254423:web:8efa55b26740eb30597b92"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    async function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      const doc = await db.collection("usernames").doc(username).get();
+      if (!doc.exists) {
+        alert("اسم المستخدم غير موجود");
+        return;
+      }
+
+      const email = doc.data().email;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          document.getElementById("admin-section").style.display = "block";
+          alert("تم تسجيل الدخول بنجاح");
+        })
+        .catch(e => alert("فشل تسجيل الدخول: " + e.message));
+    }
+
+    async function adminCreateUser() {
+      const username = document.getElementById("new-username").value;
+      const email = document.getElementById("new-email").value;
+      const password = document.getElementById("new-password").value;
+
+      const usernameRef = db.collection("usernames").doc(username);
+      const doc = await usernameRef.get();
+      if (doc.exists) {
+        alert("اسم المستخدم مستخدم مسبقاً");
+        return;
+      }
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(async () => {
+          await usernameRef.set({ email });
+          alert("تم إنشاء الحساب الجديد بنجاح");
+        })
+        .catch(e => alert("فشل إنشاء الحساب: " + e.message));
+    }
+  </script>
 </body>
 </html>
