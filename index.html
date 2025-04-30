@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Football Management</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <!-- تسجيل الدخول & التسجيل -->
+  <div id="auth-container">
+    <form id="login-form">
+      <h2>تسجيل الدخول</h2>
+      <input type="text" id="login-username" placeholder="اسم المستخدم" required>
+      <input type="password" id="login-password" placeholder="كلمة المرور" required>
+      <button type="submit">دخول</button>
+      <p>ليس لديك حساب؟ <a href="#" id="show-signup">إنشاء حساب</a></p>
+    </form>
+    <form id="signup-form" style="display:none;">
+      <h2>إنشاء حساب جديد</h2>
+      <input type="text" id="signup-username" placeholder="اسم المستخدم" required>
+      <input type="password" id="signup-password" placeholder="كلمة المرور" required>
+      <button type="submit">تسجيل</button>
+      <p>لديك حساب؟ <a href="#" id="show-login">تسجيل دخول</a></p>
+    </form>
+  </div>  <!-- زر الانتقال للوحة الادمن --><button id="admin-panel-btn" style="display:none;">لوحة الادمن</button>
+
+  <!-- لوحة الادمن -->  <div id="admin-panel" style="display:none;">
+    <h2>لوحة الادمن</h2>
+    <section>
+      <h3>إدارة الجنسيات</h3>
+      <input type="text" id="new-nation-name" placeholder="اسم الجنسية">
+      <input type="url" id="new-nation-img" placeholder="رابط صورة الجنسية">
+      <button id="add-nation-btn">إضافة جنسية</button>
+      <ul id="nation-list"></ul>
+    </section>
+    <section>
+      <h3>إدارة الأندية</h3>
+      <input type="text" id="new-club-name" placeholder="اسم النادي">
+      <input type="url" id="new-club-img" placeholder="رابط صورة النادي">
+      <button id="add-club-btn">إضافة نادي</button>
+      <ul id="club-list"></ul>
+    </section>
+  </div>  <!-- نموذج إضافة/تعديل لاعب -->  <div id="player-form-container" style="display:none;">
+    <form id="player-form">
+      <h2 id="player-form-title">إضافة لاعب</h2>
+      <input type="hidden" id="player-id"><input type="text" id="player-name" placeholder="اسم اللاعب" required>
+  <input type="number" id="player-age" placeholder="العمر" required>
+  <label>الجنسية:</label>
+  <select id="player-nation"></select>
+
+  <label>النوع:</label>
+  <select id="player-type">
+    <option value="active">حالي</option>
+    <option value="retired">متقاعد</option>
+    <option value="coaches">مدرب</option>
+  </select>
+
+  <!-- حقول الأندية تظهر ديناميكياً -->
+  <div id="clubs-selection">
+    <label>الأندية:</label>
+    <div id="clubs-checkboxes"></div>
+  </div>
+  <div id="current-club-container" style="display:none;">
+    <label>النادي الحالي:</label>
+    <select id="current-club"></select>
+  </div>
+
+  <button type="submit">حفظ</button>
+  <button type="button" id="cancel-player">إلغاء</button>
+</form>
+
+  </div>  <!-- قائمة اللاعبين -->  <div id="players-container"></div><script>
+  // تكوين Supabase
+  const SUPABASE_URL = "https://<your-project-ref>.supabase.co";
+  const SUPABASE_ANON_KEY = "<your-anon-public-key>";
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  let isAdmin = false;
+
+  // DOM Elements
+  const loginForm = document.getElementById('login-form');
+  const signupForm = document.getElementById('signup-form');
+  const showSignup = document.getElementById('show-signup');
+  const showLogin = document.getElementById('show-login');
+  const authContainer = document.getElementById('auth-container');
+  const adminBtn = document.getElementById('admin-panel-btn');
+  const adminPanel = document.getElementById('admin-panel');
+  const nationList = document.getElementById('nation-list');
+  const clubList = document.getElementById('club-list');
+  const addNationBtn = document.getElementById('add-nation-btn');
+  const addClubBtn = document.getElementById('add-club-btn');
+  const newNationName = document.getElementById('new-nation-name');
+  const newNationImg = document.getElementById('new-nation-img');
+  const newClubName = document.getElementById('new-club-name');
+  const newClubImg = document.getElementById('new-club-img');
+  const playerFormContainer = document.getElementById('player-form-container');
+  const playerForm = document.getElementById('player-form');
+  const playerFormTitle = document.getElementById('player-form-title');
+  const playerIdInput = document.getElementById('player-id');
+  const playerName = document.getElementById('player-name');
+  const playerAge = document.getElementById('player-age');
+  const playerNation = document.getElementById('player-nation');
+  const playerType = document.getElementById('player-type');
+  const clubsCheckboxes = document.getElementById('clubs-checkboxes');
+  const currentClubContainer = document.getElementById('current-club-container');
+  const currentClubSelect = document.getElementById('current-club');
+  const playersContainer = document.getElementById('players-container');
+  const cancelPlayerBtn = document.getElementById('cancel-player');
+
+  // عرض/إخفاء نماذج
+  showSignup.addEventListener('click', () => { loginForm.style.display = 'none'; signupForm.style.display = 'block'; });
+  showLogin.addEventListener('click', () => { signupForm.style.display = 'none'; loginForm.style.display = 'block'; });
+
+  // تسجيل جديد
+  signupForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const username = document.getElementById('signup-username').value;
+    const password = document.getElementById('signup-password').value;
+    const { user, error } = await supabase.auth.signUp({ email: `${username}@example.com`, password });
+    if (error) return alert(error.message);
+    await supabase.from('profiles').insert([{ id: user.id, username, is_admin: false }]);
+    alert('تم إنشاء الحساب. الرجاء تسجيل الدخول.');
+    signupForm.reset(); showLogin.click();
+  });
+
+  // تسجيل دخول
+  loginForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+    const { user, error } = await supabase.auth.signIn({ email: `${username}@example.com`, password });
+    if (error) return alert(error.message);
+    await postLoginSetup(user.id);
+  });
+
+  // بعد تسجيل الدخول
+  async function postLoginSetup(userId) {
+    authContainer.style.display = 'none';
+    const { data } = await supabase.from('profiles').select('is_admin').eq('id', userId).single();
+    isAdmin = data.is_admin;
+    if (isAdmin) adminBtn.style.display = 'block';
+    fetchPlayers();
+  }
+
+  // زر لوحة الادمن
+  adminBtn.addEventListener('click', () => {
+    adminPanel.style.display = adminPanel.style.display === 'none' ? 'block' : 'none';
+    loadNations(); loadClubs();
+  });
+
+  // إضافة جنسية
+  addNationBtn.addEventListener('click', async () => {
+    const name = newNationName.value; const img = newNationImg.value;
+    if (!name||!img) return;
+    await supabase.from('nationalities').insert([{ name, img_url: img }]); newNationName.value=''; newNationImg.value=''; loadNations();
+  });
+
+  // إضافة نادي
+  addClubBtn.addEventListener('click', async () => {
+    const name = newClubName.value; const img = newClubImg.value;
+    if (!name||!img) return;
+    await supabase.from('clubs').insert([{ name, img_url: img }]); newClubName.value=''; newClubImg.value=''; loadClubs();
+  });
+
+  // تحميل الجنسيات
+  async function loadNations() {
+    const { data } = await supabase.from('nationalities').select();
+    nationList.innerHTML = data.map(n=>`<li><img src="${n.img_url}" width="24"> ${n.name}</li>`).join('');
+    playerNation.innerHTML = data.map(n=>`<option value="${n.id}">${n.name}</option>`).join('');
+  }
+
+  // تحميل الأندية
+  async function loadClubs() {
+    const { data } = await supabase.from('clubs').select();
+    clubList.innerHTML = data.map(c=>`<li><img src="${c.img_url}" width="24"> ${c.name}</li>`).join('');
+    clubsCheckboxes.innerHTML = data.map(c=>`<label><input type=checkbox value="${c.id}"> ${c.name}</label><br>`).join('');
+    currentClubSelect.innerHTML = data.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  }
+
+  // تغيير حقول الأندية حسب نوع اللاعب
+  playerType.addEventListener('change', () => {
+    if (playerType.value === 'active') {
+      currentClubContainer.style.display='block';
+      clubsCheckboxes.parentElement.style.display='block';
+    } else {
+      currentClubContainer.style.display='none';
+      clubsCheckboxes.parentElement.style.display='block';
+    }
+  });
+
+  // حفظ/تحديث لاعب
+  playerForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = playerIdInput.value;
+    const payload = {
+      name: playerName.value,
+      age: parseInt(playerAge.value),
+      nationality_id: playerNation.value,
+      type: playerType.value,
+      clubs: JSON.stringify([...clubsCheckboxes.querySelectorAll('input:checked')].map(cb=>cb.value)),
+      current_club: playerType.value==='active'? currentClubSelect.value : null
+    };
+    if (id) {
+      await supabase.from('players').update(payload).eq('id', id);
+    } else {
+      await supabase.from('players').insert([payload]);
+    }
+    resetPlayerForm(); fetchPlayers();
+  });
+
+  cancelPlayerBtn.addEventListener('click', resetPlayerForm);
+  function resetPlayerForm() {
+    playerForm.reset(); playerIdInput.value=''; playerFormContainer.style.display='none';
+  }
+
+  // جلب وعرض اللاعبين
+  async function fetchPlayers() {
+    const { data } = await supabase.from('players').select(`*, nationalities(name, img_url), clubs`);
+    playersContainer.innerHTML = data.map(p=>{
+      let clubs = JSON.parse(p.clubs || '[]').map(cid=>`<span>${cid}</span>`).join(', ');
+      let current = p.current_club? `<p>النادي الحالي: ${p.current_club}</p>` : '';
+      return `
+      <div class="player-card">
+        <h3>${p.name}</h3>
+        <p>العمر: ${p.age}</p>
+        <p>الجنسية: <img src="${p.nationalities.img_url}" width="24"> ${p.nationalities.name}</p>
+        ${current}
+        <p>الأندية السابقة: ${clubs}</p>
+        ${isAdmin? `<button onclick="editPlayer('${p.id}')">تعديل</button>
+        <button onclick="deletePlayer('${p.id}')">حذف</button>`: ''}
+      </div>
+      `;
+    }).join('');
+  }
+
+  window.editPlayer = async id => {
+    const { data } = await supabase.from('players').select('*').eq('id', id).single();
+    playerFormTitle.textContent='تعديل لاعب';
+    playerIdInput.value = data.id;
+    playerName.value = data.name;
+    playerAge.value = data.age;
+    playerNation.value = data.nationality_id;
+    playerType.value = data.type;
+    playerType.dispatchEvent(new Event('change'));
+    const selected = JSON.parse(data.clubs || '[]');
+    clubsCheckboxes.querySelectorAll('input').forEach(cb=> cb.checked = selected.includes(cb.value));
+    if(data.current_club) currentClubSelect.value = data.current_club;
+    playerFormContainer.style.display='block';
+  };
+
+  window.deletePlayer = async id => { if(confirm('تأكيد الحذف؟')){ await supabase.from('players').delete().eq('id', id); fetchPlayers(); }};
+
+  // بدء التحميل
+  supabase.auth.onAuthStateChange((_, session) => {
+    if (session) postLoginSetup(session.user.id);
+  });
+</script></body>
+</html>
