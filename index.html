@@ -1,69 +1,58 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحدي كرة القدم</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تحدي كرة قدم - Firebase</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
 </head>
 <body>
-    <div id="login-form" class="form">
-        <h2>تسجيل الدخول</h2>
-        <input type="email" id="email" placeholder="البريد الإلكتروني">
-        <input type="password" id="password" placeholder="كلمة المرور">
-        <button onclick="login()">تسجيل الدخول</button>
-    </div>
+  <div class="container">
+    <h1>تسجيل الدخول</h1>
+    <input type="email" id="email" placeholder="البريد الإلكتروني" />
+    <input type="password" id="password" placeholder="كلمة المرور" />
+    <button onclick="login()">تسجيل الدخول</button>
+    <button onclick="signup()">إنشاء حساب</button>
 
-    <div id="main-content" style="display:none;">
-        <button onclick="showPlayers('retired')">لاعبين معتزلين</button>
-        <button onclick="showPlayers('active')">لاعبين حاليين</button>
-        <button onclick="showCoaches()">مدربين</button>
-        <button id="manage-users-button" style="display:none;" onclick="showManageUsers()">إدارة المستخدمين</button>
-        <button id="add-button" style="display:none;" onclick="showAddForm()">إضافة</button>
-        <div id="content"></div>
-    </div>
+    <div id="admin-section" style="display: none">
+      <h2>إضافة لاعب</h2>
+      <input type="text" id="name" placeholder="اسم اللاعب" />
+      <input type="number" id="age" placeholder="العمر" />
+      <select id="player-nationality"></select>
+      <input type="text" id="player_image" placeholder="رابط الصورة" />
+      <select id="type">
+        <option value="active">لاعب حالي</option>
+        <option value="retired">لاعب معتزل</option>
+        <option value="coach">مدرب</option>
+      </select>
+      <div id="club-checkboxes"></div>
+      <button onclick="addPlayer()">إضافة</button>
 
-    <div id="add-form" class="form" style="display:none;">
-        <h2>إضافة شخص جديد</h2>
-        <input type="text" id="new-name" placeholder="اسم الشخص">
-        <select id="new-nationality" placeholder="الجنسية">
-            <!-- Options will be populated dynamically -->
-        </select>
-        <input type="date" id="new-birth-date" placeholder="تاريخ الميلاد">
-        <input type="file" id="new-profile-image" accept="image/*">
-        <select id="new-type" placeholder="النوع">
-            <option value="retired_player">لاعب معتزول</option>
-            <option value="current_player">لاعب حالي</option>
-            <option value="coach">مدرب</option>
-        </select>
-        <div id="clubs-container">
-            <!-- Clubs checkboxes will be populated dynamically -->
-        </div>
-        <button onclick="addPerson()">إضافة</button>
-    </div>
+      <h2>بحث عن لاعب</h2>
+      <input type="text" id="search-input" placeholder="ابحث عن لاعب" oninput="searchPlayers()" />
 
-    <div id="manage-users-form" class="form" style="display:none;">
-        <h2>إدارة المستخدمين</h2>
-        <input type="email" id="new-user-email" placeholder="بريد المستخدم الجديد">
-        <input type="password" id="new-user-password" placeholder="كلمة مرور المستخدم الجديدة">
-        <select id="new-user-role" placeholder="دور المستخدم">
-            <option value="user">مستخدم عادي</option>
-            <option value="admin">مسؤول</option>
-        </select>
-        <button onclick="addUser()">إضافة مستخدم</button>
-        <hr>
-        <h3>قائمة المستخدمين:</h3>
-        <div id="users-list"></div>
-    </div>
+      <h2>قائمة اللاعبين</h2>
+      <div id="players-list"></div>
 
-    <div id="modal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <img id="modal-image" src="" alt="Larger Image">
-        </div>
-    </div>
+      <hr />
+      <h2>إدارة الجنسيات</h2>
+      <input type="text" id="nat-name" placeholder="اسم الجنسية" />
+      <input type="text" id="nat-img" placeholder="رابط صورة العلم" />
+      <button onclick="addNationality()">إضافة جنسية</button>
+      <div id="nat-list"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@latest"></script>
-    <script src="script.js"></script>
+      <hr />
+      <h2>إدارة الأندية</h2>
+      <input type="text" id="club-name" placeholder="اسم النادي" />
+      <input type="text" id="club-img" placeholder="رابط صورة النادي" />
+      <button onclick="addClub()">إضافة نادي</button>
+      <div id="club-list"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
