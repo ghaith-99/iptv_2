@@ -2,7 +2,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyBN-3xZDEgNzNCKd4zTDAsaaOWzjx3z9LM",
   authDomain: "fbquiz-582d3.firebaseapp.com",
   projectId: "fbquiz-582d3",
-  storageBucket: "fbquiz-582d3.appspot.com",
+  storageBucket: "fbquiz-582d3.firebasestorage.app",
   messagingSenderId: "939712254423",
   appId: "1:939712254423:web:8efa55b26740eb30597b92"
 };
