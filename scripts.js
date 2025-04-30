@@ -2,60 +2,60 @@ const firebaseConfig = {
   apiKey: "AIzaSyBN-3xZDEgNzNCKd4zTDAsaaOWzjx3z9LM",
   authDomain: "fbquiz-582d3.firebaseapp.com",
   projectId: "fbquiz-582d3",
-  storageBucket: "fbquiz-582d3.firebasestorage.app",
+  storageBucket: "fbquiz-582d3.appspot.com",
   messagingSenderId: "939712254423",
   appId: "1:939712254423:web:8efa55b26740eb30597b92"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-const auth = firebase.auth();
+const auth = firebase.auth(); // مهم جداً
 
 let playersData = [];
 
 function login() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
-      document.getElementById('admin-section').style.display = 'block';
+      document.getElementById("admin-section").style.display = "block";
       fetchPlayers();
       fetchNationalities();
       fetchClubs();
       populateNationalityDropdown();
       populateClubsCheckboxes();
     })
-    .catch(e => alert(e.message));
+    .catch(e => alert("فشل تسجيل الدخول: " + e.message));
 }
 
 function signup() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
   auth.createUserWithEmailAndPassword(email, password)
-    .then(() => alert('تم إنشاء الحساب بنجاح'))
-    .catch(e => alert(e.message));
+    .then(() => alert("تم إنشاء الحساب بنجاح"))
+    .catch(e => alert("فشل إنشاء الحساب: " + e.message));
 }
 
 function addPlayer() {
-  const name = document.getElementById('name').value;
-  const age = parseInt(document.getElementById('age').value);
-  const nationality = document.getElementById('player-nationality').value;
-  const type = document.getElementById('type').value;
-  const player_image = document.getElementById('player_image').value;
+  const name = document.getElementById("name").value;
+  const age = parseInt(document.getElementById("age").value);
+  const nationality = document.getElementById("player-nationality").value;
+  const type = document.getElementById("type").value;
+  const player_image = document.getElementById("player_image").value;
 
   const selectedClubs = Array.from(document.querySelectorAll('input[name="club-checkbox"]:checked'))
     .map(cb => ({ name: cb.value, img: cb.dataset.img }));
 
-  db.collection('players').add({
+  db.collection("players").add({
     name, age, nationality, type, player_image, clubs: selectedClubs
   }).then(() => {
-    alert('تمت إضافة اللاعب');
+    alert("تمت إضافة اللاعب");
     fetchPlayers();
   });
 }
 
 function fetchPlayers() {
-  db.collection('players').get().then(snapshot => {
+  db.collection("players").get().then(snapshot => {
     playersData = [];
     snapshot.forEach(doc => {
       playersData.push({ id: doc.id, ...doc.data() });
@@ -65,10 +65,10 @@ function fetchPlayers() {
 }
 
 function renderPlayers(data) {
-  const container = document.getElementById('players-list');
-  container.innerHTML = '';
+  const container = document.getElementById("players-list");
+  container.innerHTML = "";
   data.forEach(player => {
-    const clubImgs = player.clubs?.map(club => `<img src="${club.img}" alt="${club.name}">`).join(' ') || '';
+    const clubImgs = player.clubs?.map(club => `<img src="${club.img}" alt="${club.name}">`).join(" ") || "";
     container.innerHTML += `
       <div class="player">
         <img src="${player.player_image}" alt="صورة">
@@ -82,37 +82,38 @@ function renderPlayers(data) {
 }
 
 function deletePlayer(id) {
-  if (confirm('هل أنت متأكد من حذف هذا اللاعب؟')) {
-    db.collection('players').doc(id).delete().then(() => {
-      alert('تم الحذف');
+  if (confirm("هل أنت متأكد من حذف هذا اللاعب؟")) {
+    db.collection("players").doc(id).delete().then(() => {
+      alert("تم الحذف");
       fetchPlayers();
     });
   }
 }
 
 function searchPlayers() {
-  const query = document.getElementById('search-input').value.toLowerCase();
+  const query = document.getElementById("search-input").value.toLowerCase();
   const filtered = playersData.filter(p => p.name.toLowerCase().includes(query));
   renderPlayers(filtered);
 }
 
+// الجنسيات
 function addNationality() {
-  const name = document.getElementById('nat-name').value;
-  const img = document.getElementById('nat-img').value;
+  const name = document.getElementById("nat-name").value;
+  const img = document.getElementById("nat-img").value;
 
-  db.collection('nationalities').add({ name, img }).then(() => {
-    alert('تمت إضافة الجنسية');
-    document.getElementById('nat-name').value = '';
-    document.getElementById('nat-img').value = '';
+  db.collection("nationalities").add({ name, img }).then(() => {
+    alert("تمت إضافة الجنسية");
+    document.getElementById("nat-name").value = "";
+    document.getElementById("nat-img").value = "";
     fetchNationalities();
     populateNationalityDropdown();
   });
 }
 
 function fetchNationalities() {
-  db.collection('nationalities').get().then(snapshot => {
-    const list = document.getElementById('nat-list');
-    list.innerHTML = '';
+  db.collection("nationalities").get().then(snapshot => {
+    const list = document.getElementById("nat-list");
+    list.innerHTML = "";
     snapshot.forEach(doc => {
       const item = doc.data();
       list.innerHTML += `
@@ -126,9 +127,9 @@ function fetchNationalities() {
 }
 
 function populateNationalityDropdown() {
-  const dropdown = document.getElementById('player-nationality');
-  dropdown.innerHTML = '';
-  db.collection('nationalities').get().then(snapshot => {
+  const dropdown = document.getElementById("player-nationality");
+  dropdown.innerHTML = "";
+  db.collection("nationalities").get().then(snapshot => {
     snapshot.forEach(doc => {
       const item = doc.data();
       dropdown.innerHTML += `<option value="${item.name}">${item.name}</option>`;
@@ -136,23 +137,24 @@ function populateNationalityDropdown() {
   });
 }
 
+// الأندية
 function addClub() {
-  const name = document.getElementById('club-name').value;
-  const img = document.getElementById('club-img').value;
+  const name = document.getElementById("club-name").value;
+  const img = document.getElementById("club-img").value;
 
-  db.collection('clubs').add({ name, img }).then(() => {
-    alert('تمت إضافة النادي');
-    document.getElementById('club-name').value = '';
-    document.getElementById('club-img').value = '';
+  db.collection("clubs").add({ name, img }).then(() => {
+    alert("تمت إضافة النادي");
+    document.getElementById("club-name").value = "";
+    document.getElementById("club-img").value = "";
     fetchClubs();
     populateClubsCheckboxes();
   });
 }
 
 function fetchClubs() {
-  db.collection('clubs').get().then(snapshot => {
-    const list = document.getElementById('club-list');
-    list.innerHTML = '';
+  db.collection("clubs").get().then(snapshot => {
+    const list = document.getElementById("club-list");
+    list.innerHTML = "";
     snapshot.forEach(doc => {
       const item = doc.data();
       list.innerHTML += `
@@ -166,9 +168,9 @@ function fetchClubs() {
 }
 
 function populateClubsCheckboxes() {
-  const container = document.getElementById('club-checkboxes');
-  container.innerHTML = '';
-  db.collection('clubs').get().then(snapshot => {
+  const container = document.getElementById("club-checkboxes");
+  container.innerHTML = "";
+  db.collection("clubs").get().then(snapshot => {
     snapshot.forEach(doc => {
       const item = doc.data();
       container.innerHTML += `
