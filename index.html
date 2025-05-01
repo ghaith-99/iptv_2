@@ -116,6 +116,14 @@
                     <i class="fas fa-futbol me-2"></i>
                     تحدي خمن اللاعب
                 </a>
+                <button id="gameRulesBtn" class="btn btn-outline-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#gameRulesModal">
+                    <i class="fas fa-exclamation-circle"></i>
+                </button>
+                <div class="d-none d-md-flex align-items-center me-3">
+                    <span class="badge bg-danger text-white p-2">
+                        <i class="fas fa-info-circle me-1"></i> الأسئلة: نعم أو لا فقط
+                    </span>
+                </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -126,6 +134,9 @@
                         </li>
                         <li class="nav-item" id="adminNavItem">
                             <a class="nav-link" href="#adminPanel">لوحة التحكم</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#gameRulesModal">قواعد اللعبة</a>
                         </li>
                     </ul>
                     <div class="d-flex">
@@ -156,6 +167,9 @@
                         <div class="text-center mt-2">
                             <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#advancedFilterSection">
                                 <i class="fas fa-filter"></i> فلترة متقدمة
+                            </button>
+                            <button class="btn btn-success btn-sm ms-2" type="button" id="startQuizGameBtn">
+                                <i class="fas fa-gamepad"></i> ابدأ تحدي خمن اللاعب
                             </button>
                         </div>
                     </div>
@@ -253,551 +267,845 @@
                 </div>
             </section>
             
-            <!-- Admin Panel Section (Hidden for regular users) -->
-            <section id="adminPanel" class="mb-5 d-none">
-                <h2 class="section-title">لوحة التحكم</h2>
-                <div id="adminPanelContent">
-                    <div class="row mb-4">
-                        <div class="col-md-8">
-                            <h4>إدارة شخصيات كرة القدم</h4>
-                            <div class="btn-group">
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPersonModal">
-                                    <i class="fas fa-user-plus me-2"></i>إضافة لاعب/مدرب
-                                </button>
-                                <button class="btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#countryModal">
-                                    <i class="fas fa-flag me-2"></i>إدارة الجنسيات
-                                </button>
-                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#clubModal">
-                                    <i class="fas fa-futbol me-2"></i>إدارة الأندية
-                                </button>
-                                <button class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#leagueModal">
-                                    <i class="fas fa-trophy me-2"></i>إدارة الدوريات
-                                </button>
+            <!-- Guess the Player Game Section -->
+            <section id="guessGameSection" class="mb-5">
+                <h2 class="section-title">تحدي خمن اللاعب</h2>
+                
+                <!-- Game Description Card -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-gamepad me-2"></i>كيف تلعب التحدي؟</h5>
+                        <div class="game-rules">
+                            <h6>كيف تلعب تحدي خمن اللاعب؟</h6>
+                            <ul class="mt-3">
+                                <li>تُلعب بين لاعبين اثنين وحكم</li>
+                                <li>الحكم يختار لاعباً أو مدرباً دون كشف اسمه</li>
+                                <li><strong>يجب طرح أسئلة محددة تُجيب بـ"نعم" أو "لا" فقط</strong></li>
+                                <li>يتناوب اللاعبان في طرح الأسئلة دون تكرار</li>
+                                <li>أول من يخمن الاسم الصحيح هو الفائز</li>
+                            </ul>
+                            
+                            <div class="alert alert-warning mt-4 text-center game-rule-alert" style="font-size: 1.1rem;">
+                                <strong>ملاحظة هامة:</strong> <span class="fw-bold">الأسئلة يجب أن تكون محددة وتُجيب بـ"نعم" أو "لا".</span>
                             </div>
+                            
+                            <h6 class="mt-3">أمثلة على الأسئلة المقبولة:</h6>
+                            <ul>
+                                <li>هل يلعب في الدوري الإسباني؟ <span class="text-success"><i class="fas fa-check"></i></span></li>
+                                <li>هل هو مهاجم؟ <span class="text-success"><i class="fas fa-check"></i></span></li>
+                                <li>هل فاز بكأس العالم؟ <span class="text-success"><i class="fas fa-check"></i></span></li>
+                                <li>هل جنسيته أوروبية؟ <span class="text-success"><i class="fas fa-check"></i></span></li>
+                            </ul>
+
+                            <h6 class="mt-3">أمثلة على الأسئلة غير المقبولة:</h6>
+                            <ul>
+                                <li>ما هو ناديه الحالي؟ <span class="text-danger"><i class="fas fa-times"></i></span></li>
+                                <li>كم عمره؟ <span class="text-danger"><i class="fas fa-times"></i></span></li>
+                                <li>في أي دوري يلعب؟ <span class="text-danger"><i class="fas fa-times"></i></span></li>
+                            </ul>
+                            
+                            <p class="mt-3">الحكم يستخدم الموقع لعرض معلومات اللاعب دون إظهار الاسم.</p>
                         </div>
-                        <div class="col-md-4">
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="searchAdmin" placeholder="بحث...">
-                                <button class="btn btn-outline-secondary" type="button">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
+                        <div class="text-center mt-3">
+                            <button id="startGameBtn" class="btn btn-primary">
+                                <i class="fas fa-play-circle me-2"></i>بدء تحدي جديد
+                            </button>
                         </div>
                     </div>
-                    
-                    <div class="table-responsive">
-                        <table class="table table-striped table-sm table-responsive-md">
-                            <thead>
-                                <tr>
-                                    <th>الصورة</th>
-                                    <th>الاسم</th>
-                                    <th class="d-none d-md-table-cell">العمر</th>
-                                    <th class="d-none d-md-table-cell">الجنسية</th>
-                                    <th class="d-none d-md-table-cell">الفئة</th>
-                                    <th class="d-none d-md-table-cell">النادي الحالي</th>
-                                    <th>إجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adminTableBody">
-                                <!-- Admin table data will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
-            </section>
-        </div>
-    </div>
-    
-    <!-- Fullscreen Image Modal -->
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalTitle" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered modal-fullscreen">
-            <div class="modal-content bg-dark">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title text-white" id="imageModalTitle">صورة</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body d-flex align-items-center justify-content-center p-0">
-                    <img src="" class="modal-img img-fluid" id="fullscreenImage" alt="صورة بحجم كامل">
-                </div>
-                <div class="modal-footer border-0 justify-content-center">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">إغلاق</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Add/Edit Person Modal -->
-    <div class="modal fade" id="addPersonModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="personModalTitle">إضافة شخصية جديدة</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="personForm">
-                        <input type="hidden" id="personId">
-                        <div class="mb-3">
-                            <label for="personImage" class="form-label">الصورة</label>
-                            <input type="file" class="form-control" id="personImage" accept="image/*">
-                            <div id="imagePreviewContainer" class="mt-2 d-none">
-                                <img id="imagePreview" style="max-width: 200px; max-height: 200px;">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="personName" class="form-label">الاسم</label>
-                            <input type="text" class="form-control" id="personName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="personAge" class="form-label">العمر</label>
-                            <input type="number" class="form-control" id="personAge" required min="16" max="100">
-                        </div>
-                        <div class="mb-3">
-                            <label for="personPosition" class="form-label">المركز</label>
-                            <select class="form-select" id="personPosition">
-                                <option value="" selected disabled>اختر المركز</option>
-                                <option value="مهاجم">مهاجم</option>
-                                <option value="وسط">وسط</option>
-                                <option value="مدافع">مدافع</option>
-                                <option value="حارس مرمى">حارس مرمى</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="personHeight" class="form-label">الطول (سم)</label>
-                            <input type="number" class="form-control" id="personHeight" placeholder="مثال: 180" min="120" max="250">
-                        </div>
-                        <div class="mb-3">
-                            <label for="personNationalNumber" class="form-label">رقم اللاعب مع المنتخب</label>
-                            <input type="number" class="form-control" id="personNationalNumber" placeholder="مثال: 10" min="1" max="99">
-                        </div>
-                        <div class="mb-3">
-                            <label for="personClubNumber" class="form-label">رقم اللاعب مع النادي</label>
-                            <input type="number" class="form-control" id="personClubNumber" placeholder="مثال: 7" min="1" max="99">
-                        </div>
-                        <div class="mb-3">
-                            <label for="personNationality" class="form-label">الجنسية</label>
-                            <select class="form-select" id="personNationality" required>
-                                <option value="" selected disabled>اختر الجنسية</option>
-                                <!-- ستتم تعبئة الخيارات عبر JavaScript -->
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="personCategory" class="form-label">الفئة</label>
-                            <select class="form-select" id="personCategory" required>
-                                <option value="current">لاعب حالي</option>
-                                <option value="retired">لاعب معتزل</option>
-                                <option value="coach">مدرب</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="personCurrentClub" class="form-label">النادي الحالي</label>
-                            <select class="form-select" id="personCurrentClub">
-                                <option value="" selected disabled>اختر النادي</option>
-                                <!-- ستتم تعبئة الخيارات عبر JavaScript -->
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="personLeague" class="form-label">الدوري</label>
-                            <select class="form-select" id="personLeague">
-                                <option value="" selected disabled>اختر الدوري</option>
-                                <!-- ستتم تعبئة الخيارات عبر JavaScript -->
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">الأندية السابقة</label>
-                            <div id="previousClubsContainer">
-                                <div class="row mb-2 previous-club-entry">
-                                    <div class="col-md-10">
-                                        <select class="form-select previous-club-select" data-bs-toggle="tooltip" title="اختر نادي سابق">
-                                            <option value="" selected disabled>اختر النادي</option>
-                                            <!-- ستتم تعبئة الخيارات عبر JavaScript -->
-                                        </select>
+                
+                <!-- Active Game Interface (Hidden by default) -->
+                <div id="activeGameInterface" class="d-none">
+                    <div class="row">
+                        <!-- Game Control Panel (for the referee) -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0"><i class="fas fa-gavel me-2"></i>لوحة الحكم</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="selectedPlayerInfo" class="d-none">
+                                        <p class="text-success mb-3"><i class="fas fa-check-circle me-2"></i>تم اختيار اللاعب</p>
+                                        <button class="btn btn-info text-white mb-3 w-100" id="viewSelectedPlayerBtn">
+                                            <i class="fas fa-eye me-2"></i>عرض اللاعب المختار
+                                        </button>
+                                        <button class="btn btn-outline-secondary mb-3 w-100" id="selectDifferentPlayerBtn">
+                                            <i class="fas fa-random me-2"></i>اختيار لاعب آخر
+                                        </button>
                                     </div>
-                                    <div class="col-md-2">
-                                        <button type="button" class="btn btn-danger remove-club-btn">
-                                            <i class="fas fa-times"></i>
+                                    
+                                    <div id="playerSelectionDiv">
+                                        <p class="text-center">اختر لاعباً أو مدرباً للتحدي:</p>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="gamePlayerSearch" placeholder="ابحث عن لاعب...">
+                                            <button class="btn btn-outline-secondary" type="button" id="gamePlayerSearchBtn">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="form-check form-check-inline mb-3">
+                                            <input class="form-check-input" type="radio" name="playerCategory" id="currentPlayersRadio" value="current" checked>
+                                            <label class="form-check-label" for="currentPlayersRadio">لاعبون حاليون</label>
+                                        </div>
+                                        <div class="form-check form-check-inline mb-3">
+                                            <input class="form-check-input" type="radio" name="playerCategory" id="retiredPlayersRadio" value="retired">
+                                            <label class="form-check-label" for="retiredPlayersRadio">لاعبون معتزلون</label>
+                                        </div>
+                                        <div class="form-check form-check-inline mb-3">
+                                            <input class="form-check-input" type="radio" name="playerCategory" id="coachesRadio" value="coach">
+                                            <label class="form-check-label" for="coachesRadio">مدربون</label>
+                                        </div>
+                                        
+                                        <div id="gamePlayerResults" class="game-player-results overflow-auto">
+                                            <!-- Player selection results will appear here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                    
+                                    <!-- Question and Answer Area -->
+                                    <div class="col-md-8 mb-4">
+                                        <div class="card shadow-sm h-100">
+                                            <div class="card-header bg-success text-white">
+                                                <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>الأسئلة والأجوبة</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="noPlayerSelectedMessage" class="text-center py-4">
+                                                    <i class="fas fa-exclamation-circle text-warning fs-1 mb-3"></i>
+                                                    <p>يجب على الحكم اختيار لاعب أولاً لبدء التحدي</p>
+                                                </div>
+                                                
+                                                <div id="questionAnswerArea" class="d-none">
+                                                    <!-- New Question Form -->
+                                                    <div class="new-question-form mb-4">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" id="questionInput" placeholder="اكتب سؤالك هنا (يجب أن يُجاب عليه بنعم أو لا)...">
+                                                            <button class="btn btn-primary" type="button" id="askQuestionBtn">
+                                                                <i class="fas fa-paper-plane me-2"></i>اسأل
+                                                            </button>
+                                                        </div>
+                                                        <div class="form-text text-danger" id="questionValidationMessage">
+                                                            <i class="fas fa-info-circle me-1"></i> يجب أن يكون السؤال محدداً ويُجاب عليه بـ "نعم" أو "لا" فقط.
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Question History -->
+                                                    <div class="card">
+                                                        <div class="card-header bg-light">
+                                                            <h6 class="mb-0">سجل الأسئلة</h6>
+                                                        </div>
+                                                        <div class="card-body p-0">
+                                                            <ul class="list-group list-group-flush" id="questionHistoryList">
+                                                                <!-- Questions and answers will be added here -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Guess Form -->
+                                                    <div class="mt-4">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" id="playerGuessInput" placeholder="اكتب اسم اللاعب الذي تخمنه...">
+                                                            <button class="btn btn-danger" type="button" id="submitGuessBtn">
+                                                                <i class="fas fa-check-circle me-2"></i>تخمين
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Admin Panel Section (Hidden for regular users) -->
+                    <section id="adminPanel" class="mb-5 d-none">
+                        <h2 class="section-title">لوحة التحكم</h2>
+                        <div id="adminPanelContent">
+                            <div class="row mb-4">
+                                <div class="col-md-8">
+                                    <h4>إدارة شخصيات كرة القدم</h4>
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPersonModal">
+                                            <i class="fas fa-user-plus me-2"></i>إضافة لاعب/مدرب
+                                        </button>
+                                        <button class="btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#countryModal">
+                                            <i class="fas fa-flag me-2"></i>إدارة الجنسيات
+                                        </button>
+                                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#clubModal">
+                                            <i class="fas fa-futbol me-2"></i>إدارة الأندية
+                                        </button>
+                                        <button class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#leagueModal">
+                                            <i class="fas fa-trophy me-2"></i>إدارة الدوريات
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="searchAdmin" placeholder="بحث...">
+                                        <button class="btn btn-outline-secondary" type="button">
+                                            <i class="fas fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-outline-primary mt-2" id="addPreviousClubBtn">
-                                <i class="fas fa-plus me-1"></i> إضافة نادي سابق
-                            </button>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-striped table-sm table-responsive-md">
+                                    <thead>
+                                        <tr>
+                                            <th>الصورة</th>
+                                            <th>الاسم</th>
+                                            <th class="d-none d-md-table-cell">العمر</th>
+                                            <th class="d-none d-md-table-cell">الجنسية</th>
+                                            <th class="d-none d-md-table-cell">الفئة</th>
+                                            <th class="d-none d-md-table-cell">النادي الحالي</th>
+                                            <th>إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adminTableBody">
+                                        <!-- Admin table data will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="personAchievements" class="form-label">الإنجازات</label>
-                            <textarea class="form-control" id="personAchievements" rows="3"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="button" class="btn btn-primary" id="savePersonBtn">حفظ</button>
+                    </section>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Player Details Modal -->
-    <div class="modal fade" id="playerDetailsModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="playerDetailsTitle">تفاصيل اللاعب</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0" id="playerDetailsContent">
-                    <!-- Player details will be loaded here -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+            
+            <!-- Fullscreen Image Modal -->
+            <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalTitle" aria-hidden="true" data-bs-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+                    <div class="modal-content bg-dark">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title text-white" id="imageModalTitle">صورة</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body d-flex align-items-center justify-content-center p-0">
+                            <img src="" class="modal-img img-fluid" id="fullscreenImage" alt="صورة بحجم كامل">
+                        </div>
+                        <div class="modal-footer border-0 justify-content-center">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">إغلاق</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js"></script>
-    
-    <!-- Modal إدارة الجنسيات -->
-    <div class="modal fade" id="countryModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">إدارة الجنسيات</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <form id="countryForm" class="mb-4">
-                                <input type="hidden" id="countryId">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="countryName" class="form-label">اسم الدولة</label>
-                                            <input type="text" class="form-control" id="countryName" required>
-                                        </div>
+            
+            <!-- Add/Edit Person Modal -->
+            <div class="modal fade" id="addPersonModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="personModalTitle">إضافة شخصية جديدة</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="personForm">
+                                <input type="hidden" id="personId">
+                                <div class="mb-3">
+                                    <label for="personImage" class="form-label">الصورة</label>
+                                    <input type="file" class="form-control" id="personImage" accept="image/*">
+                                    <div id="imagePreviewContainer" class="mt-2 d-none">
+                                        <img id="imagePreview" style="max-width: 200px; max-height: 200px;">
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="countryFlag" class="form-label">علم الدولة</label>
-                                            <input type="file" class="form-control" id="countryFlag" accept="image/*">
-                                            <div id="flagPreviewContainer" class="mt-2 d-none">
-                                                <img id="flagPreview" style="max-width: 100px; max-height: 60px;">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="personName" class="form-label">الاسم</label>
+                                    <input type="text" class="form-control" id="personName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="personAge" class="form-label">العمر</label>
+                                    <input type="number" class="form-control" id="personAge" required min="16" max="100">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="personPosition" class="form-label">المركز</label>
+                                    <select class="form-select" id="personPosition">
+                                        <option value="" selected disabled>اختر المركز</option>
+                                        <option value="مهاجم">مهاجم</option>
+                                        <option value="وسط">وسط</option>
+                                        <option value="مدافع">مدافع</option>
+                                        <option value="حارس مرمى">حارس مرمى</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="personHeight" class="form-label">الطول (سم)</label>
+                                    <input type="number" class="form-control" id="personHeight" placeholder="مثال: 180" min="120" max="250">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="personNationalNumber" class="form-label">رقم اللاعب مع المنتخب</label>
+                                    <input type="number" class="form-control" id="personNationalNumber" placeholder="مثال: 10" min="1" max="99">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="personClubNumber" class="form-label">رقم اللاعب مع النادي</label>
+                                    <input type="number" class="form-control" id="personClubNumber" placeholder="مثال: 7" min="1" max="99">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="personNationality" class="form-label">الجنسية</label>
+                                    <select class="form-select" id="personNationality" required>
+                                        <option value="" selected disabled>اختر الجنسية</option>
+                                        <!-- ستتم تعبئة الخيارات عبر JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="personCategory" class="form-label">الفئة</label>
+                                    <select class="form-select" id="personCategory" required>
+                                        <option value="current">لاعب حالي</option>
+                                        <option value="retired">لاعب معتزل</option>
+                                        <option value="coach">مدرب</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="personCurrentClub" class="form-label">النادي الحالي</label>
+                                    <select class="form-select" id="personCurrentClub">
+                                        <option value="" selected disabled>اختر النادي</option>
+                                        <!-- ستتم تعبئة الخيارات عبر JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="personLeague" class="form-label">الدوري</label>
+                                    <select class="form-select" id="personLeague">
+                                        <option value="" selected disabled>اختر الدوري</option>
+                                        <!-- ستتم تعبئة الخيارات عبر JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">الأندية السابقة</label>
+                                    <div id="previousClubsContainer">
+                                        <div class="row mb-2 previous-club-entry">
+                                            <div class="col-md-10">
+                                                <select class="form-select previous-club-select" data-bs-toggle="tooltip" title="اختر نادي سابق">
+                                                    <option value="" selected disabled>اختر النادي</option>
+                                                    <!-- ستتم تعبئة الخيارات عبر JavaScript -->
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-danger remove-club-btn">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
+                                    <button type="button" class="btn btn-outline-primary mt-2" id="addPreviousClubBtn">
+                                        <i class="fas fa-plus me-1"></i> إضافة نادي سابق
+                                    </button>
                                 </div>
-                                <div class="d-flex">
-                                    <button type="button" class="btn btn-primary" id="saveCountryBtn">حفظ</button>
-                                    <button type="button" class="btn btn-outline-secondary ms-2" id="resetCountryForm">إلغاء</button>
+                                <div class="mb-3">
+                                    <label for="personAchievements" class="form-label">الإنجازات</label>
+                                    <textarea class="form-control" id="personAchievements" rows="3"></textarea>
                                 </div>
                             </form>
                         </div>
-                    </div>
-                    
-                    <div class="mt-3 mb-3">
-                        <button type="button" class="btn btn-success" id="showBulkCountryModalBtn">
-                            <i class="fas fa-file-import me-1"></i> إضافة دول دفعة واحدة
-                        </button>
-                    </div>
-                    
-                    <div class="table-responsive mt-4">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>العلم</th>
-                                    <th>اسم الدولة</th>
-                                    <th>إجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="countriesTableBody">
-                                <!-- بيانات الدول ستظهر هنا -->
-                            </tbody>
-                        </table>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                            <button type="button" class="btn btn-primary" id="savePersonBtn">حفظ</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Modal إدارة الأندية -->
-    <div class="modal fade" id="clubModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">إدارة الأندية</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <!-- Player Details Modal -->
+            <div class="modal fade" id="playerDetailsModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="playerDetailsTitle">تفاصيل اللاعب</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-0" id="playerDetailsContent">
+                            <!-- Player details will be loaded here -->
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <div class="yes-no-reminder bg-warning p-2 rounded d-flex align-items-center">
+                                <i class="fas fa-exclamation-triangle me-2 text-danger"></i>
+                                <strong>تذكير:</strong> الأسئلة يجب أن تكون بـ"نعم" أو "لا" فقط
+                            </div>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <form id="clubForm" class="mb-4">
-                                <input type="hidden" id="clubId">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="clubName" class="form-label">اسم النادي</label>
-                                            <input type="text" class="form-control" id="clubName" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="clubLogo" class="form-label">شعار النادي</label>
-                                            <input type="file" class="form-control" id="clubLogo" accept="image/*">
-                                            <div id="logoPreviewContainer" class="mt-2 d-none">
-                                                <img id="logoPreview" style="max-width: 100px; max-height: 100px;">
+            </div>
+
+            <!-- Scripts -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+            <script src="app.js"></script>
+            
+            <!-- Modal إدارة الجنسيات -->
+            <div class="modal fade" id="countryModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">إدارة الجنسيات</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-4">
+                                <div class="col-md-12">
+                                    <form id="countryForm" class="mb-4">
+                                        <input type="hidden" id="countryId">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="countryName" class="form-label">اسم الدولة</label>
+                                                    <input type="text" class="form-control" id="countryName" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="countryFlag" class="form-label">علم الدولة</label>
+                                                    <input type="file" class="form-control" id="countryFlag" accept="image/*">
+                                                    <div id="flagPreviewContainer" class="mt-2 d-none">
+                                                        <img id="flagPreview" style="max-width: 100px; max-height: 60px;">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-primary" id="saveCountryBtn">حفظ</button>
+                                            <button type="button" class="btn btn-outline-secondary ms-2" id="resetCountryForm">إلغاء</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <div class="d-flex">
-                                    <button type="button" class="btn btn-primary" id="saveClubBtn">حفظ</button>
-                                    <button type="button" class="btn btn-outline-secondary ms-2" id="resetClubForm">إلغاء</button>
-                                </div>
-                            </form>
+                            </div>
+                            
+                            <div class="mt-3 mb-3">
+                                <button type="button" class="btn btn-success" id="showBulkCountryModalBtn">
+                                    <i class="fas fa-file-import me-1"></i> إضافة دول دفعة واحدة
+                                </button>
+                            </div>
+                            
+                            <div class="table-responsive mt-4">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>العلم</th>
+                                            <th>اسم الدولة</th>
+                                            <th>إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="countriesTableBody">
+                                        <!-- بيانات الدول ستظهر هنا -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="mt-3 mb-3">
-                        <button type="button" class="btn btn-success" id="showBulkClubModalBtn">
-                            <i class="fas fa-file-import me-1"></i> إضافة أندية دفعة واحدة
-                        </button>
-                    </div>
-                    
-                    <div class="table-responsive mt-4">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>الشعار</th>
-                                    <th>اسم النادي</th>
-                                    <th>إجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="clubsTableBody">
-                                <!-- بيانات الأندية ستظهر هنا -->
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- دعم إضافي لتكبير الصور -->
-    <script>
-        // دالة بديلة لفتح المودال
-        function showImageModal(imgSrc, title) {
-            if (!imgSrc) return;
-            
-            const fullscreenImage = document.getElementById('fullscreenImage');
-            const imageModalTitle = document.getElementById('imageModalTitle');
-            
-            if (fullscreenImage) fullscreenImage.src = imgSrc;
-            if (imageModalTitle) imageModalTitle.textContent = title || '';
-            
-            const modalElement = document.getElementById('imageModal');
-            if (modalElement) {
-                const modal = new bootstrap.Modal(modalElement);
-                modal.show();
-            }
-        }
-        
-        // تسجيل مستمعي الأحداث للصور عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            // طريقة بديلة لإضافة مستمعات الأحداث للصور
-            document.querySelectorAll('.card-img-top, .player-image-container').forEach(img => {
-                img.addEventListener('click', function(e) {
-                    const image = e.target.closest('.card-img-top') || e.target;
-                    if (image && image.src) {
-                        showImageModal(image.src, image.alt);
+            <!-- Modal إدارة الأندية -->
+            <div class="modal fade" id="clubModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">إدارة الأندية</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-4">
+                                <div class="col-md-12">
+                                    <form id="clubForm" class="mb-4">
+                                        <input type="hidden" id="clubId">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="clubName" class="form-label">اسم النادي</label>
+                                                    <input type="text" class="form-control" id="clubName" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="clubLogo" class="form-label">شعار النادي</label>
+                                                    <input type="file" class="form-control" id="clubLogo" accept="image/*">
+                                                    <div id="logoPreviewContainer" class="mt-2 d-none">
+                                                        <img id="logoPreview" style="max-width: 100px; max-height: 100px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-primary" id="saveClubBtn">حفظ</button>
+                                            <button type="button" class="btn btn-outline-secondary ms-2" id="resetClubForm">إلغاء</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3 mb-3">
+                                <button type="button" class="btn btn-success" id="showBulkClubModalBtn">
+                                    <i class="fas fa-file-import me-1"></i> إضافة أندية دفعة واحدة
+                                </button>
+                            </div>
+                            
+                            <div class="table-responsive mt-4">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>الشعار</th>
+                                            <th>اسم النادي</th>
+                                            <th>إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="clubsTableBody">
+                                        <!-- بيانات الأندية ستظهر هنا -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- دعم إضافي لتكبير الصور -->
+            <script>
+                // دالة بديلة لفتح المودال
+                function showImageModal(imgSrc, title) {
+                    if (!imgSrc) return;
+                    
+                    const fullscreenImage = document.getElementById('fullscreenImage');
+                    const imageModalTitle = document.getElementById('imageModalTitle');
+                    
+                    if (fullscreenImage) fullscreenImage.src = imgSrc;
+                    if (imageModalTitle) imageModalTitle.textContent = title || '';
+                    
+                    const modalElement = document.getElementById('imageModal');
+                    if (modalElement) {
+                        const modal = new bootstrap.Modal(modalElement);
+                        modal.show();
                     }
+                }
+                
+                // تسجيل مستمعي الأحداث للصور عند تحميل الصفحة
+                document.addEventListener('DOMContentLoaded', function() {
+                    // طريقة بديلة لإضافة مستمعات الأحداث للصور
+                    document.querySelectorAll('.card-img-top, .player-image-container').forEach(img => {
+                        img.addEventListener('click', function(e) {
+                            const image = e.target.closest('.card-img-top') || e.target;
+                            if (image && image.src) {
+                                showImageModal(image.src, image.alt);
+                            }
+                        });
+                    });
                 });
-            });
-        });
-    </script>
-    
-    <!-- Modal الإضافة الجماعية للدول -->
-    <div class="modal fade" id="bulkCountryModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">إضافة مجموعة دول</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        أدخل كل دولة في سطر منفصل بالصيغة التالية: اسم الدولة, رابط العلم
-                    </div>
-                    <div class="mb-3">
-                        <label for="bulkCountriesText" class="form-label">بيانات الدول</label>
-                        <textarea class="form-control" id="bulkCountriesText" rows="10" dir="ltr" style="font-family: monospace;"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <h6>مثال:</h6>
-                        <pre class="bg-light p-2 rounded" dir="ltr">
+            </script>
+            
+            <!-- Modal الإضافة الجماعية للدول -->
+            <div class="modal fade" id="bulkCountryModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">إضافة مجموعة دول</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                أدخل كل دولة في سطر منفصل بالصيغة التالية: اسم الدولة, رابط العلم
+                            </div>
+                            <div class="mb-3">
+                                <label for="bulkCountriesText" class="form-label">بيانات الدول</label>
+                                <textarea class="form-control" id="bulkCountriesText" rows="10" dir="ltr" style="font-family: monospace;"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <h6>مثال:</h6>
+                                <pre class="bg-light p-2 rounded" dir="ltr">
 الأردن, https://example.com/flags/jordan.png
 لبنان, https://example.com/flags/lebanon.png</pre>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                            <button type="button" class="btn btn-primary" id="saveBulkCountriesBtn">حفظ</button>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="button" class="btn btn-primary" id="saveBulkCountriesBtn">حفظ</button>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Modal الإضافة الجماعية للأندية -->
-    <div class="modal fade" id="bulkClubModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">إضافة مجموعة أندية</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        أدخل كل نادي في سطر منفصل بالصيغة التالية: اسم النادي, رابط الشعار
-                    </div>
-                    <div class="mb-3">
-                        <label for="bulkClubsText" class="form-label">بيانات الأندية</label>
-                        <textarea class="form-control" id="bulkClubsText" rows="10" dir="ltr" style="font-family: monospace;"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <h6>مثال:</h6>
-                        <pre class="bg-light p-2 rounded" dir="ltr">
+            <!-- Modal الإضافة الجماعية للأندية -->
+            <div class="modal fade" id="bulkClubModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">إضافة مجموعة أندية</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                أدخل كل نادي في سطر منفصل بالصيغة التالية: اسم النادي, رابط الشعار
+                            </div>
+                            <div class="mb-3">
+                                <label for="bulkClubsText" class="form-label">بيانات الأندية</label>
+                                <textarea class="form-control" id="bulkClubsText" rows="10" dir="ltr" style="font-family: monospace;"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <h6>مثال:</h6>
+                                <pre class="bg-light p-2 rounded" dir="ltr">
 الرائد, https://example.com/logos/alraed.png
 الشباب, https://example.com/logos/alshabab.png</pre>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                            <button type="button" class="btn btn-primary" id="saveBulkClubsBtn">حفظ</button>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="button" class="btn btn-primary" id="saveBulkClubsBtn">حفظ</button>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- Modal نتائج البحث -->
-    <div class="modal fade" id="searchResultsModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">نتائج البحث</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="searchNoResults" class="alert alert-info d-none">
-                        <i class="fas fa-info-circle me-2"></i>
-                        لم يتم العثور على نتائج للبحث. يرجى تجربة كلمات بحث مختلفة.
+            
+            <!-- Modal نتائج البحث -->
+            <div class="modal fade" id="searchResultsModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">نتائج البحث</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="searchNoResults" class="alert alert-info d-none">
+                                <i class="fas fa-info-circle me-2"></i>
+                                لم يتم العثور على نتائج للبحث. يرجى تجربة كلمات بحث مختلفة.
+                            </div>
+                            <div class="row" id="searchResultsContainer">
+                                <!-- نتائج البحث ستظهر هنا -->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                        </div>
                     </div>
-                    <div class="row" id="searchResultsContainer">
-                        <!-- نتائج البحث ستظهر هنا -->
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Modal إدارة الدوريات -->
-    <div class="modal fade" id="leagueModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">إدارة الدوريات</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <form id="leagueForm" class="mb-4">
-                                <input type="hidden" id="leagueId">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="leagueName" class="form-label">اسم الدوري</label>
-                                            <input type="text" class="form-control" id="leagueName" required>
+            <!-- Modal إدارة الدوريات -->
+            <div class="modal fade" id="leagueModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">إدارة الدوريات</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-4">
+                                <div class="col-md-12">
+                                    <form id="leagueForm" class="mb-4">
+                                        <input type="hidden" id="leagueId">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="leagueName" class="form-label">اسم الدوري</label>
+                                                    <input type="text" class="form-control" id="leagueName" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="leagueLogo" class="form-label">شعار الدوري</label>
+                                                    <input type="file" class="form-control" id="leagueLogo" accept="image/*">
+                                                    <div id="leagueLogoPreviewContainer" class="mt-2 d-none">
+                                                        <img id="leagueLogoPreview" style="max-width: 100px; max-height: 100px;">
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-primary" id="saveLeagueBtn">حفظ</button>
+                                            <button type="button" class="btn btn-outline-secondary ms-2" id="resetLeagueForm">إلغاء</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3 mb-3">
+                                <button type="button" class="btn btn-success" id="showBulkLeagueModalBtn">
+                                    <i class="fas fa-file-import me-1"></i> إضافة دوريات دفعة واحدة
+                                </button>
+                            </div>
+                            
+                            <div class="table-responsive mt-4">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>الشعار</th>
+                                            <th>اسم الدوري</th>
+                                            <th>إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="leaguesTableBody">
+                                        <!-- بيانات الدوريات ستظهر هنا -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal الإضافة الجماعية للدوريات -->
+            <div class="modal fade" id="bulkLeagueModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">إضافة مجموعة دوريات</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                أدخل كل دوري في سطر منفصل بالصيغة التالية: اسم الدوري, رابط الشعار
+                            </div>
+                            <div class="mb-3">
+                                <label for="bulkLeaguesText" class="form-label">بيانات الدوريات</label>
+                                <textarea class="form-control" id="bulkLeaguesText" rows="10" dir="ltr" style="font-family: monospace;"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <h6>مثال:</h6>
+                                <pre class="bg-light p-2 rounded" dir="ltr">
+الدوري الإنجليزي الممتاز, https://example.com/leagues/premier_league.png
+الدوري الإسباني, https://example.com/leagues/la_liga.png</pre>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                            <button type="button" class="btn btn-primary" id="saveBulkLeaguesBtn">حفظ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Game Rules Modal after other modals -->
+            <div class="modal fade" id="gameRulesModal" tabindex="-1" aria-labelledby="gameRulesModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="gameRulesModalLabel">قواعد اللعبة</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h6 class="fw-bold mb-3">كيفية اللعب:</h6>
+                            <ul class="list-group list-group-flush game-rules-list">
+                                <li class="list-group-item">تُلعب بين لاعبين اثنين وحكم.</li>
+                                <li class="list-group-item">يقوم الحكم باختيار لاعب أو مدرب من الموقع دون الكشف عن هويته.</li>
+                                <li class="list-group-item">يتناوب اللاعبان في طرح أسئلة يمكن الإجابة عليها بـ "نعم" أو "لا" فقط.</li>
+                                <li class="list-group-item game-rule-highlight">الأسئلة يجب أن تكون محددة وتُجيب بـ "نعم" أو "لا" فقط.</li>
+                                <li class="list-group-item">لا يمكن تكرار نفس السؤال.</li>
+                                <li class="list-group-item">اللاعب الذي يخمن هوية اللاعب أو المدرب بشكل صحيح أولاً يفوز.</li>
+                            </ul>
+                            
+                            <div class="alert alert-warning mt-4">
+                                <strong>ملاحظة هامة:</strong> الأسئلة يجب أن تكون محددة وتُجيب بـ"نعم" أو "لا".
+                            </div>
+                            
+                            <h6 class="fw-bold mt-4 mb-2">أمثلة على الأسئلة:</h6>
+                            <ul>
+                                <li>هل يلعب في الدوري الإسباني؟</li>
+                                <li>هل هو مهاجم؟</li>
+                                <li>هل فاز بكأس العالم؟</li>
+                                <li>هل جنسيته أوروبية؟</li>
+                            </ul>
+                            
+                            <p class="mt-3">الحكم يستخدم الموقع لعرض معلومات اللاعب دون إظهار الاسم.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">فهمت</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal لعبة خمن اللاعب -->
+            <div class="modal fade" id="quizGameModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">تحدي خمن اللاعب</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <!-- منطقة تفاصيل اللاعب (بدون اسم) -->
+                                    <div class="player-details-quiz-container" id="quizPlayerDetails">
+                                        <!-- سيتم تحميل تفاصيل اللاعب هنا -->
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="leagueLogo" class="form-label">شعار الدوري</label>
-                                            <input type="file" class="form-control" id="leagueLogo" accept="image/*">
-                                            <div id="leagueLogoPreviewContainer" class="mt-2 d-none">
-                                                <img id="leagueLogoPreview" style="max-width: 100px; max-height: 100px;">
+                                </div>
+                                <div class="col-lg-4">
+                                    <!-- منطقة الأسئلة -->
+                                    <div class="quiz-questions-section">
+                                        <h4 class="mb-3">الأسئلة والإجابات</h4>
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <strong>الأسئلة يجب أن تكون محددة وتُجيب بـ"نعم" أو "لا" فقط</strong>
+                                        </div>
+                                        
+                                        <!-- نموذج لإضافة سؤال -->
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <form id="questionForm">
+                                                    <div class="input-group mb-2">
+                                                        <input type="text" class="form-control" id="questionInput" 
+                                                            placeholder="أدخل سؤالاً يمكن إجابته بنعم أو لا..." required>
+                                                        <button class="btn btn-primary" type="submit" id="askQuestionBtn">
+                                                            <i class="fas fa-question-circle"></i> اسأل
+                                                        </button>
+                                                    </div>
+                                                    <div class="form-text text-muted">
+                                                        <i class="fas fa-lightbulb me-1 text-warning"></i>
+                                                        مثال: هل يلعب في الدوري الإنجليزي؟ هل هو مهاجم؟
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- قائمة الأسئلة والإجابات -->
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title mb-3">سجل الأسئلة</h5>
+                                                <div id="questionsLog" class="quiz-questions-log">
+                                                    <!-- سيتم إضافة الأسئلة والإجابات هنا -->
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex">
-                                    <button type="button" class="btn btn-primary" id="saveLeagueBtn">حفظ</button>
-                                    <button type="button" class="btn btn-outline-secondary ms-2" id="resetLeagueForm">إلغاء</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="mt-3 mb-3">
-                        <button type="button" class="btn btn-success" id="showBulkLeagueModalBtn">
-                            <i class="fas fa-file-import me-1"></i> إضافة دوريات دفعة واحدة
-                        </button>
-                    </div>
-                    
-                    <div class="table-responsive mt-4">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>الشعار</th>
-                                    <th>اسم الدوري</th>
-                                    <th>إجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="leaguesTableBody">
-                                <!-- بيانات الدوريات ستظهر هنا -->
-                            </tbody>
-                        </table>
+                        <div class="modal-footer justify-content-between">
+                            <div>
+                                <button type="button" class="btn btn-success" id="guessPlayerBtn">
+                                    <i class="fas fa-lightbulb me-1"></i> خمّن اللاعب
+                                </button>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    إنهاء اللعبة
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Modal الإضافة الجماعية للدوريات -->
-    <div class="modal fade" id="bulkLeagueModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">إضافة مجموعة دوريات</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        أدخل كل دوري في سطر منفصل بالصيغة التالية: اسم الدوري, رابط الشعار
+            
+            <!-- Modal تخمين اللاعب -->
+            <div class="modal fade" id="guessPlayerModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">خمّن اسم اللاعب</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="playerGuessInput" 
+                                    placeholder="أدخل اسم اللاعب..." required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                            <button type="button" class="btn btn-primary" id="submitGuessBtn">تأكيد</button>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="bulkLeaguesText" class="form-label">بيانات الدوريات</label>
-                        <textarea class="form-control" id="bulkLeaguesText" rows="10" dir="ltr" style="font-family: monospace;"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <h6>مثال:</h6>
-                        <pre class="bg-light p-2 rounded" dir="ltr">
-الدوري الإنجليزي الممتاز, https://example.com/leagues/premier_league.png
-الدوري الإسباني, https://example.com/leagues/la_liga.png</pre>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="button" class="btn btn-primary" id="saveBulkLeaguesBtn">حفظ</button>
                 </div>
             </div>
         </div>

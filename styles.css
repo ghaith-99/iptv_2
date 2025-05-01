@@ -737,156 +737,520 @@ body {
     gap: 8px;
 }
 
-/* تنسيقات جديدة للتصميم الجديد */
-.player-details-new {
-    min-height: 400px;
-    direction: rtl;
+/* تنسيق زر قواعد اللعبة */
+#gameRulesBtn {
+    margin-left: 10px;
+    font-size: 1.1rem;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 }
 
-.player-image-section {
-    padding: 0;
-    height: 400px;
-    overflow: hidden;
+#gameRulesBtn:hover {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.modal-header .btn-close {
+    margin: -0.5rem auto -0.5rem -0.5rem;
+}
+
+/* تنسيق محتوى مودال قواعد اللعبة */
+#gameRulesModal .modal-body {
+    text-align: right;
+}
+
+#gameRulesModal ul {
+    padding-right: 20px;
+}
+
+#gameRulesModal .alert-warning {
+    border-radius: 8px;
+}
+
+/* Game Rules Modal */
+.alert-danger {
+    border-width: 2px;
+    border-style: solid;
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.3);
+}
+
+#gameRulesModal .text-success {
+    font-weight: bold;
+}
+
+#gameRulesModal .text-danger {
+    font-weight: bold;
+}
+
+#gameRulesModal ul li {
+    margin-bottom: 8px;
+}
+
+/* Badge in navbar */
+.navbar .badge {
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+    }
+}
+
+/* Yes/No Reminder in Player Details Modal */
+.yes-no-reminder {
+    border: 2px solid #dc3545;
+    box-shadow: 0 0 8px rgba(220, 53, 69, 0.4);
+    animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+    0% {
+        border-color: #dc3545;
+    }
+    50% {
+        border-color: #ffc107;
+    }
+    100% {
+        border-color: #dc3545;
+    }
+}
+
+.yes-no-reminder strong {
+    margin: 0 5px;
+}
+
+/* تنسيقات للتأكيد على قاعدة الأسئلة */
+#questionValidationMessage {
+    font-weight: bold;
+    padding: 5px 10px;
+    margin-top: 5px;
+    border-radius: 4px;
+    background-color: rgba(220, 53, 69, 0.1);
+    border-left: 3px solid #dc3545;
+}
+
+/* تنسيق للتأكيد على قاعدة الأسئلة في المودال */
+.alert-warning.game-rule-alert {
+    font-size: 1.1rem;
+    border-left: 4px solid #ffc107;
+    text-align: center;
+}
+
+/* Quiz Game Styles */
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-overlay span {
+    font-size: 8rem;
+    color: white;
+    font-weight: bold;
+}
+
+.quiz-player-image {
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.player-image-container {
+    position: relative;
+    margin: 0 auto;
+    max-width: 300px;
+}
+
+.quiz-questions-log {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.question-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
     background-color: #f8f9fa;
 }
 
-.player-info-section {
+.question-item.yes {
+    border-right: 5px solid #28a745;
+}
+
+.question-item.no {
+    border-right: 5px solid #dc3545;
+}
+
+.answer-yes {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.answer-no {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Game Rules Styles */
+.game-rules-list li {
+    margin-bottom: 0.75rem;
+}
+
+.game-rule-highlight {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* ===== أنماط لعبة التخمين ===== */
+.quiz-player-card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
     padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-player-image-container {
+    position: relative;
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
+}
+
+.quiz-player-image {
+    width: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.blurred-image {
+    filter: blur(8px);
+}
+
+.question-mark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+.question-mark-overlay i {
+    font-size: 4rem;
+    color: white;
+}
+
+.hidden-name {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #6c757d;
+}
+
+.revealed-name {
+    color: #198754;
+    animation: revealAnimation 1s;
+}
+
+@keyframes revealAnimation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.quiz-questions-section {
     background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.quiz-questions-log {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.question-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+}
+
+.question-text {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.answer-text {
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: inline-block;
+    font-weight: 500;
+}
+
+.answer-yes {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.answer-no {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.player-select-card {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.player-select-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.game-player-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* تحدي خمن اللاعب */
+.game-rules {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.game-player-results {
+    max-height: 300px;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    margin-top: 1rem;
+}
+
+.player-select-card {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.player-select-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.game-player-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+#questionValidationMessage {
+    font-size: 0.8rem;
+    display: none;
+}
+
+.question-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+}
+
+.question-text {
+    margin-bottom: 5px;
+}
+
+.answer-text {
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.answer-yes {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.answer-no {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Additional styles for game UI */
+.player-details-new {
+    display: flex;
+    flex-direction: row-reverse; /* RTL layout */
+}
+
+.player-image-section {
+    position: relative;
 }
 
 .player-big-image {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
+    max-height: 500px;
+    object-fit: contain;
 }
 
-#playerDetailsModal .player-name-header {
-    font-size: 24px;
+.player-info-section {
+    padding: 1.5rem;
+}
+
+.player-name-header {
+    font-size: 1.8rem;
     font-weight: bold;
-    margin-bottom: 25px;
-    text-align: right;
+    margin-bottom: 1.5rem;
+    color: #343a40;
 }
 
-#playerDetailsModal .info-section {
-    margin-bottom: 30px;
-}
-
-#playerDetailsModal .section-title {
+.section-title {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
-    justify-content: flex-end;
+    margin-bottom: 1rem;
 }
 
-#playerDetailsModal .section-title-text {
-    color: var(--primary-color);
+.section-title-text {
     font-weight: bold;
-    font-size: 18px;
-    margin-right: 10px;
-}
-
-#playerDetailsModal .section-line {
-    width: 5px;
-    height: 25px;
-    background-color: var(--accent-color);
-    display: inline-block;
-}
-
-#playerDetailsModal .modal-content {
-    border-radius: 0;
-    border: none;
-}
-
-#playerDetailsModal .modal-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #eee;
-}
-
-#playerDetailsContent {
-    padding: 0 !important;
-}
-
-/* تنسيقات الجدول والبيانات */
-#playerDetailsModal .info-table {
-    width: 100%;
-}
-
-#playerDetailsModal .info-table tr {
-    height: 40px;
-}
-
-#playerDetailsModal .info-table td {
-    padding: 5px 0;
-}
-
-#playerDetailsModal .info-label {
-    text-align: left;
-    font-weight: normal;
-    color: #666;
-    width: 120px;
-}
-
-#playerDetailsModal .info-value {
-    text-align: right;
-    font-weight: bold;
-}
-
-#playerDetailsModal .info-value img {
-    width: 25px;
-    height: 20px;
-    object-fit: contain;
-    margin-left: 5px;
-    vertical-align: middle;
-}
-
-#playerDetailsModal .close-btn {
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-#playerDetailsModal .close-btn:hover {
-    background-color: #5a6268;
-}
-
-#playerDetailsModal .modal-footer {
-    justify-content: flex-start !important;
-    padding: 15px 20px;
-}
-
-/* تنسيقات خاصة بالأندية السابقة في التفاصيل */
-#playerDetailsModal .previous-clubs-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-#playerDetailsModal .club-badge {
-    display: flex;
-    align-items: center;
-    background-color: #f8f9fa;
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-#playerDetailsModal .club-badge img {
-    width: 30px;
-    height: 25px;
-    object-fit: contain;
     margin-left: 10px;
 }
 
-/* تنسيقات خاصة بالإنجازات */
-#playerDetailsModal .achievements-container {
+.section-line {
+    flex: 1;
+    height: 1px;
+    background-color: #dee2e6;
+}
+
+.info-table {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.info-table td {
+    padding: 0.5rem 0;
+    vertical-align: middle;
+}
+
+.info-label {
+    font-weight: bold;
+    width: 35%;
+}
+
+.info-value {
+    display: flex;
+    align-items: center;
+}
+
+.info-value img {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+    margin-left: 0.5rem;
+}
+
+.previous-clubs-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
+    margin-top: 0.5rem;
+}
+
+.club-badge {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.club-badge img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    margin-left: 5px;
+}
+
+.achievements-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 0.5rem;
+}
+
+.achievement-badge {
+    background-color: #e9ecef;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+/* Game question styles */
+.question-history {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.player-turn-badge {
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.player-1 {
+    background-color: #cfe2ff;
+    color: #084298;
+}
+
+.player-2 {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.close-btn {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    color: #495057;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+}
+
+.close-btn:hover {
+    background-color: #e9ecef;
+}
+
+/* RTL specific adjustments */
+.player-details-new .info-value img {
+    margin-right: 0;
+    margin-left: 0.5rem;
 } 
